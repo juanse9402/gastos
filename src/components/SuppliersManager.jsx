@@ -331,7 +331,7 @@ export default function SuppliersManager({
           </p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+        <div className="horizontal-scroller" style={{ alignItems: 'center', gap: '0.65rem' }}>
           <button
             type="button"
             className="btn btn-outline btn-sm"
@@ -349,7 +349,7 @@ export default function SuppliersManager({
             style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.65rem 1rem', borderColor: 'rgba(59, 130, 246, 0.4)', color: 'var(--blue-light)' }}
           >
             <Receipt size={15} />
-            <span>+ Registrar Compra / Factura</span>
+            <span>+ Factura</span>
           </button>
 
           <button
@@ -359,13 +359,13 @@ export default function SuppliersManager({
             style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.65rem 1.15rem' }}
           >
             <CreditCard size={15} />
-            <span>💳 Pagar / Abonar a Proveedor</span>
+            <span>💳 Pagar / Abonar</span>
           </button>
         </div>
       </div>
 
       {/* KPI Cards Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '1rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 210px), 1fr))', gap: '1rem' }}>
         
         {/* Total Deuda */}
         <div className="glass-card" style={{ padding: '1.15rem 1.25rem', borderLeft: '4px solid var(--rose-primary)' }}>
@@ -430,8 +430,8 @@ export default function SuppliersManager({
       </div>
 
       {/* Tabs & Search Navigation Bar */}
-      <div className="glass-card" style={{ padding: '0.75rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+      <div className="glass-card" style={{ padding: '0.75rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <div className="horizontal-scroller" style={{ gap: '0.5rem', width: '100%', maxWidth: '100%' }}>
           <button
             type="button"
             className={`btn btn-sm ${activeTab === 'suppliers' ? 'btn-primary' : 'btn-outline'}`}
@@ -484,7 +484,7 @@ export default function SuppliersManager({
 
       {/* VIEW 1: DIRECTORIO DE PROVEEDORES */}
       {activeTab === 'suppliers' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1rem' }}>
           {filteredSuppliers.map(sup => {
             const hasDebt = sup.saldoPendiente > 0;
             const cleanPhone = sup.telefono ? sup.telefono.replace(/\D/g, '') : '';

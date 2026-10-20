@@ -121,7 +121,7 @@ export default function TransactionsTable({ transactions, categories, onAddTrans
         </div>
 
         <form onSubmit={handleCreateSubmit}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: '1rem' }}>
             <div className="form-group">
               <label className="form-label">Fecha</label>
               <input
@@ -228,7 +228,7 @@ export default function TransactionsTable({ transactions, categories, onAddTrans
           </div>
 
           {/* Tipo Filter */}
-          <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+          <div className="horizontal-scroller" style={{ gap: '0.4rem', alignItems: 'center' }}>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Tipo:</span>
             <button
               type="button"
@@ -254,7 +254,7 @@ export default function TransactionsTable({ transactions, categories, onAddTrans
           </div>
 
           {/* Método Filter */}
-          <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+          <div className="horizontal-scroller" style={{ gap: '0.4rem', alignItems: 'center' }}>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Canal:</span>
             <button
               type="button"

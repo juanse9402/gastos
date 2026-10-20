@@ -182,7 +182,7 @@ export default function DailyClosesReview({ dailyCloses, onApproveClose, onRejec
                       paddingTop: '1.25rem',
                       borderTop: '1px solid var(--border-subtle)',
                       display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))',
                       gap: '1rem',
                       fontSize: '0.85rem',
                       animation: 'fadeIn 0.2s ease-out'

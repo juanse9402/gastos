@@ -199,32 +199,32 @@ export default function AuthPortal({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '1.5rem',
+      padding: 'clamp(0.85rem, 3vw, 1.5rem)',
       background: 'radial-gradient(circle at 50% 20%, rgba(245, 158, 11, 0.12) 0%, transparent 60%), #0a0e17'
     }}>
       <div style={{ maxWidth: '520px', width: '100%' }}>
         
         {/* Header Logo: Quadra SaaS */}
-        <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <div style={{
-            width: '64px',
-            height: '64px',
-            borderRadius: '18px',
+            width: '60px',
+            height: '60px',
+            borderRadius: '16px',
             background: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)',
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '2.2rem',
+            fontSize: '2rem',
             fontWeight: 900,
             color: '#fff',
             boxShadow: '0 8px 25px rgba(16, 185, 129, 0.4)',
-            marginBottom: '0.85rem',
+            marginBottom: '0.75rem',
             letterSpacing: '-0.04em'
           }}>
             Q
           </div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em' }}>
-            QUADRA <span style={{ color: 'var(--emerald-light)', fontSize: '1.1rem', verticalAlign: 'middle', fontWeight: 700, padding: '0.15rem 0.5rem', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>CLOUD</span>
+          <h1 style={{ fontSize: 'clamp(1.5rem, 5.5vw, 2rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em' }}>
+            QUADRA <span style={{ color: 'var(--emerald-light)', fontSize: '0.95rem', verticalAlign: 'middle', fontWeight: 700, padding: '0.15rem 0.5rem', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>CLOUD</span>
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.35rem' }}>
             Plataforma SaaS de Control de Caja & Finanzas para Negocios y Comercios

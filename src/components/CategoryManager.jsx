@@ -29,7 +29,7 @@ export default function CategoryManager({ categories, onAddCategory, onDeleteCat
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem' }}>
         
         {/* Create form */}
         <div className="glass-card">

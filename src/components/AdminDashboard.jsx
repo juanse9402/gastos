@@ -270,7 +270,7 @@ export default function AdminDashboard({ transactions, categories }) {
             </div>
 
             {/* Granularity Pills */}
-            <div style={{ display: 'flex', background: 'var(--bg-secondary)', padding: '4px', borderRadius: '14px', border: '1px solid var(--border-subtle)', gap: '4px', flexWrap: 'wrap' }}>
+            <div className="horizontal-scroller" style={{ background: 'var(--bg-secondary)', padding: '4px', borderRadius: '14px', border: '1px solid var(--border-subtle)', gap: '4px' }}>
               <button
                 type="button"
                 className={`btn btn-sm ${granularity === 'dia' ? 'btn-primary' : 'btn-outline'}`}
@@ -447,7 +447,7 @@ export default function AdminDashboard({ transactions, categories }) {
           </div>
 
           {/* Quick Channel Filter Toggle */}
-          <div style={{ display: 'flex', background: 'var(--bg-input)', padding: '3px', borderRadius: '12px', border: '1px solid var(--border-subtle)', gap: '4px' }}>
+          <div className="horizontal-scroller" style={{ background: 'var(--bg-input)', padding: '3px', borderRadius: '12px', border: '1px solid var(--border-subtle)', gap: '4px' }}>
             <button
               type="button"
               className={`btn btn-sm ${selectedMethod === 'all' ? 'btn-primary' : 'btn-outline'}`}
@@ -476,7 +476,7 @@ export default function AdminDashboard({ transactions, categories }) {
         </div>
 
         {/* Two-Column Comparison */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.25rem' }}>
           
           {/* COLUMN 1: CAJA FÍSICA (EFECTIVO) */}
           <div style={{

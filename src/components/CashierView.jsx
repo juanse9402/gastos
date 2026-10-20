@@ -171,7 +171,7 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
 
       {/* Main Form & Live Cuadre Card */}
       <form onSubmit={handleSubmit}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
           
           {/* Column 1: Shift info and Sales */}
           <div className="glass-card">
@@ -290,7 +290,7 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
                 <div style={{ fontSize: '0.75rem', color: 'var(--amber-light)', fontWeight: 'bold', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                   <Sparkles size={13} /> Cantidad de billetes en caja:
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(85px, 1fr))', gap: '0.5rem' }}>
                   {BILL_DENOMINATIONS.map(b => (
                     <div key={b.value}>
                       <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>{b.label}</span>
@@ -382,7 +382,7 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '1.25rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))', gap: '0.85rem', marginBottom: '1.25rem' }}>
             <div style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }}>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>CAJA Esperada</div>
               <div style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{formatCurrency(numCajaEsperada)}</div>
