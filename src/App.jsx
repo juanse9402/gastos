@@ -7,6 +7,7 @@ import DailyClosesReview from './components/DailyClosesReview';
 import TransactionsTable from './components/TransactionsTable';
 import CategoryManager from './components/CategoryManager';
 import UserManager from './components/UserManager';
+import SuppliersManager from './components/SuppliersManager';
 import PinModal from './components/PinModal';
 import ExportModal from './components/ExportModal';
 import SupabaseModal from './components/SupabaseModal';
@@ -18,6 +19,8 @@ import {
   INITIAL_TRANSACTIONS, 
   INITIAL_DAILY_CLOSES, 
   INITIAL_CAFE_DATA,
+  INITIAL_SUPPLIERS,
+  INITIAL_SUPPLIER_INVOICES,
   getDefaultCategoriesForIndustry 
 } from './data/initialData';
 
@@ -48,6 +51,7 @@ import {
   BookOpen, 
   Tag, 
   Users,
+  Truck,
   Database,
   Sparkles,
   ExternalLink,
@@ -66,7 +70,7 @@ export default function App() {
     return saved ? JSON.parse(saved) : INITIAL_USERS;
   });
 
-  // 2. Tenants Data dictionary: { [companyId]: { transactions, dailyCloses, categories } }
+  // 2. Tenants Data dictionary: { [companyId]: { transactions, dailyCloses, categories, suppliers, supplierInvoices } }
   const [tenantsData, setTenantsData] = useState(() => {
     const saved = localStorage.getItem('cloud_tenants_data');
     if (saved) return JSON.parse(saved);
@@ -74,9 +78,15 @@ export default function App() {
       'comp-paperia': {
         transactions: INITIAL_TRANSACTIONS,
         dailyCloses: INITIAL_DAILY_CLOSES,
-        categories: INITIAL_CATEGORIES
+        categories: INITIAL_CATEGORIES,
+        suppliers: INITIAL_SUPPLIERS,
+        supplierInvoices: INITIAL_SUPPLIER_INVOICES
       },
-      'comp-cafe': INITIAL_CAFE_DATA
+      'comp-cafe': {
+        ...INITIAL_CAFE_DATA,
+        suppliers: [],
+        supplierInvoices: []
+      }
     };
   });
 
@@ -105,18 +115,28 @@ export default function App() {
   // Active dataset for current activeCompany
   const currentCompanyData = useMemo(() => {
     if (!activeCompany) {
-      return { transactions: [], dailyCloses: [], categories: [] };
+      return { transactions: [], dailyCloses: [], categories: [], suppliers: [], supplierInvoices: [] };
     }
-    return tenantsData[activeCompany.id] || {
+    const data = tenantsData[activeCompany.id] || {
       transactions: [],
       dailyCloses: [],
-      categories: getDefaultCategoriesForIndustry(activeCompany.industry)
+      categories: getDefaultCategoriesForIndustry(activeCompany.industry),
+      suppliers: [],
+      supplierInvoices: []
+    };
+
+    return {
+      ...data,
+      suppliers: data.suppliers !== undefined ? data.suppliers : (activeCompany.id === 'comp-paperia' ? INITIAL_SUPPLIERS : []),
+      supplierInvoices: data.supplierInvoices !== undefined ? data.supplierInvoices : (activeCompany.id === 'comp-paperia' ? INITIAL_SUPPLIER_INVOICES : [])
     };
   }, [activeCompany, tenantsData]);
 
   const transactions = currentCompanyData.transactions || [];
   const dailyCloses = currentCompanyData.dailyCloses || [];
   const categories = currentCompanyData.categories || [];
+  const suppliers = currentCompanyData.suppliers || [];
+  const supplierInvoices = currentCompanyData.supplierInvoices || [];
 
   // Modals & Tabs
   const [isPinModalOpen, setIsPinModalOpen] = useState(false);
@@ -454,6 +474,111 @@ export default function App() {
     }
   };
 
+  // Supplier CRUD and Payments
+  const handleAddSupplier = (newSupplier) => {
+    updateActiveCompanyData(prev => ({
+      ...prev,
+      suppliers: [newSupplier, ...(prev.suppliers || [])]
+    }));
+  };
+
+  const handleDeleteSupplier = (supplierId) => {
+    updateActiveCompanyData(prev => ({
+      ...prev,
+      suppliers: (prev.suppliers || []).filter(s => s.id !== supplierId)
+    }));
+  };
+
+  const handleAddSupplierInvoice = (newInvoice, immediatePayment) => {
+    updateActiveCompanyData(prev => {
+      const currentSuppliers = prev.suppliers || [];
+      const updatedSuppliers = immediatePayment ? currentSuppliers : currentSuppliers.map(s => 
+        s.id === newInvoice.supplierId ? { ...s, saldoPendiente: (Number(s.saldoPendiente) || 0) + Number(newInvoice.total) } : s
+      );
+
+      return {
+        ...prev,
+        suppliers: updatedSuppliers,
+        supplierInvoices: [newInvoice, ...(prev.supplierInvoices || [])]
+      };
+    });
+
+    if (immediatePayment) {
+      const tx = {
+        id: `tx-supp-imm-${Date.now()}`,
+        fecha: immediatePayment.fecha,
+        descripcion: `Compra Contado: ${immediatePayment.supplierName} (${immediatePayment.numeroFactura})`,
+        tipo: 'Gasto',
+        categoria: immediatePayment.categoria || 'Insumos y Materia Prima',
+        monto: immediatePayment.monto,
+        metodo: immediatePayment.metodo,
+        notas: 'Factura pagada de contado'
+      };
+      handleAddTransaction(tx);
+    }
+  };
+
+  const handleRegisterSupplierPayment = (paymentData) => {
+    updateActiveCompanyData(prev => {
+      const currentInvoices = prev.supplierInvoices || [];
+      const currentSuppliers = prev.suppliers || [];
+
+      // 1. Update invoice if specified
+      let updatedInvoices = currentInvoices;
+      if (paymentData.invoiceId) {
+        updatedInvoices = currentInvoices.map(inv => {
+          if (inv.id === paymentData.invoiceId) {
+            const newBal = Math.max(0, (Number(inv.saldoPendiente) || 0) - Number(paymentData.monto));
+            return {
+              ...inv,
+              saldoPendiente: newBal,
+              estado: newBal <= 0 ? 'Pagado' : 'Parcial',
+              pagos: [
+                ...(inv.pagos || []),
+                {
+                  id: `pay-${Date.now()}`,
+                  fecha: paymentData.fecha,
+                  monto: paymentData.monto,
+                  metodo: paymentData.metodo,
+                  notas: paymentData.notas
+                }
+              ]
+            };
+          }
+          return inv;
+        });
+      }
+
+      // 2. Update supplier balance
+      const updatedSuppliers = currentSuppliers.map(sup => {
+        if (sup.id === paymentData.supplierId) {
+          const newBal = Math.max(0, (Number(sup.saldoPendiente) || 0) - Number(paymentData.monto));
+          return { ...sup, saldoPendiente: newBal };
+        }
+        return sup;
+      });
+
+      return {
+        ...prev,
+        suppliers: updatedSuppliers,
+        supplierInvoices: updatedInvoices
+      };
+    });
+
+    // 3. Inject transaction into cash flow
+    const newTx = {
+      id: `tx-supp-pay-${Date.now()}`,
+      fecha: paymentData.fecha,
+      descripcion: `Pago Proveedor: ${paymentData.supplierName} (${paymentData.numeroFactura})`,
+      tipo: 'Gasto',
+      categoria: paymentData.categoria || 'Insumos y Materia Prima',
+      monto: paymentData.monto,
+      metodo: paymentData.metodo,
+      notas: paymentData.notas || 'Abono / Pago de factura'
+    };
+    handleAddTransaction(newTx);
+  };
+
   // Reset to initial demo data
   const handleResetDemo = () => {
     if (activeCompany?.id === 'comp-paperia') {
@@ -471,8 +596,9 @@ export default function App() {
     }
   };
 
-  // Count pending daily closes
+  // Count pending daily closes and supplier invoices
   const pendingClosesCount = dailyCloses.filter(c => c.estadoRevision !== 'Aprobado').length;
+  const pendingInvoicesCount = (supplierInvoices || []).filter(inv => inv.estado !== 'Pagado').length;
 
   // IF NO USER IS LOGGED IN -> SHOW AUTH PORTAL!
   if (!currentUser) {
@@ -637,6 +763,31 @@ export default function App() {
 
                 <button
                   type="button"
+                  className={`tab-btn ${adminTab === 'suppliers' ? 'active' : ''}`}
+                  onClick={() => setAdminTab('suppliers')}
+                  style={{ position: 'relative' }}
+                >
+                  <Truck size={17} />
+                  <span>Proveedores & Pagos</span>
+                  {pendingInvoicesCount > 0 && (
+                    <span
+                      style={{
+                        background: 'var(--rose-primary)',
+                        color: '#fff',
+                        borderRadius: '10px',
+                        padding: '0.1rem 0.45rem',
+                        fontSize: '0.7rem',
+                        fontWeight: 'bold',
+                        marginLeft: '0.3rem'
+                      }}
+                    >
+                      {pendingInvoicesCount}
+                    </span>
+                  )}
+                </button>
+
+                <button
+                  type="button"
                   className={`tab-btn ${adminTab === 'categories' ? 'active' : ''}`}
                   onClick={() => setAdminTab('categories')}
                 >
@@ -677,6 +828,18 @@ export default function App() {
                 onAddTransaction={handleAddTransaction}
                 onDeleteTransaction={handleDeleteTransaction}
                 onEditTransaction={handleEditTransaction}
+              />
+            )}
+
+            {adminTab === 'suppliers' && (
+              <SuppliersManager
+                suppliers={suppliers}
+                invoices={supplierInvoices}
+                activeCompany={activeCompany}
+                onAddSupplier={handleAddSupplier}
+                onDeleteSupplier={handleDeleteSupplier}
+                onAddInvoice={handleAddSupplierInvoice}
+                onRegisterPayment={handleRegisterSupplierPayment}
               />
             )}
 

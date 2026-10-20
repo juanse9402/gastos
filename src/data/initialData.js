@@ -387,3 +387,115 @@ export const INITIAL_CAFE_DATA = {
     }
   ]
 };
+
+// Initial Suppliers for La Papería
+export const INITIAL_SUPPLIERS = [
+  {
+    id: 'supp-1',
+    companyId: 'comp-paperia',
+    name: 'Distribuidora Papas del Valle',
+    categoria: 'Insumos / Papa',
+    contacto: 'Don Hernán Gómez',
+    telefono: '3124567890',
+    nit: '900.456.789-1',
+    ciudad: 'Popayán',
+    saldoPendiente: 450000
+  },
+  {
+    id: 'supp-2',
+    companyId: 'comp-paperia',
+    name: 'Postobón & Bebidas Popayán',
+    categoria: 'Gaseosas & Bebidas',
+    contacto: 'Carlos Ruiz (Vendedor)',
+    telefono: '3109876543',
+    nit: '890.123.456-7',
+    ciudad: 'Popayán',
+    saldoPendiente: 280000
+  },
+  {
+    id: 'supp-3',
+    companyId: 'comp-paperia',
+    name: 'Carnes & Embutidos La Sabana',
+    categoria: 'Carnes & Toppings',
+    contacto: 'Doña Martha López',
+    telefono: '3157891234',
+    nit: '901.345.678-2',
+    ciudad: 'Popayán',
+    saldoPendiente: 0
+  },
+  {
+    id: 'supp-4',
+    companyId: 'comp-paperia',
+    name: 'Empaques y Desechables del Sur',
+    categoria: 'Empaques & Desechables',
+    contacto: 'Lina Marcela',
+    telefono: '3186543210',
+    nit: '900.876.543-9',
+    ciudad: 'Popayán',
+    saldoPendiente: 120000
+  }
+];
+
+// Initial Supplier Invoices
+export const INITIAL_SUPPLIER_INVOICES = [
+  {
+    id: 'inv-1',
+    companyId: 'comp-paperia',
+    supplierId: 'supp-1',
+    supplierName: 'Distribuidora Papas del Valle',
+    numeroFactura: 'FAC-8921',
+    fecha: '2026-09-22',
+    fechaVencimiento: '2026-10-05',
+    descripcion: '10 bultos de Papa Pastusa lavada para freír',
+    total: 950000,
+    saldoPendiente: 450000,
+    estado: 'Parcial',
+    pagos: [
+      { id: 'pay-1', fecha: '2026-09-25', monto: 500000, metodo: 'Banco', notas: 'Transferencia Nequi anticipo' }
+    ]
+  },
+  {
+    id: 'inv-2',
+    companyId: 'comp-paperia',
+    supplierId: 'supp-2',
+    supplierName: 'Postobón & Bebidas Popayán',
+    numeroFactura: 'FAC-4402',
+    fecha: '2026-09-26',
+    fechaVencimiento: '2026-10-10',
+    descripcion: 'Pedido semanal gaseosas pet 350ml y botellas vidrio',
+    total: 280000,
+    saldoPendiente: 280000,
+    estado: 'Pendiente',
+    pagos: []
+  },
+  {
+    id: 'inv-3',
+    companyId: 'comp-paperia',
+    supplierId: 'supp-3',
+    supplierName: 'Carnes & Embutidos La Sabana',
+    numeroFactura: 'REM-1092',
+    fecha: '2026-09-18',
+    fechaVencimiento: '2026-09-25',
+    descripcion: '25kg tocineta ahumada y carne especial hamburguesa',
+    total: 620000,
+    saldoPendiente: 0,
+    estado: 'Pagado',
+    pagos: [
+      { id: 'pay-2', fecha: '2026-09-20', monto: 620000, metodo: 'Banco', notas: 'Transferencia Bancolombia saldo total' }
+    ]
+  },
+  {
+    id: 'inv-4',
+    companyId: 'comp-paperia',
+    supplierId: 'supp-4',
+    supplierName: 'Empaques y Desechables del Sur',
+    numeroFactura: 'FAC-3105',
+    fecha: '2026-09-27',
+    fechaVencimiento: '2026-10-12',
+    descripcion: 'Cajas térmicas para papas, tenedores, servilletas impresas',
+    total: 120000,
+    saldoPendiente: 120000,
+    estado: 'Pendiente',
+    pagos: []
+  }
+];
