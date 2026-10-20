@@ -15,11 +15,11 @@ const BILL_DENOMINATIONS = [
   { value: 2000, label: '$2.000' }
 ];
 
-export default function CashierView({ dailyCloses, onAddDailyClose }) {
+export default function CashierView({ currentUser, dailyCloses, onAddDailyClose }) {
   const todayStr = new Date().toISOString().split('T')[0];
 
   const [fecha, setFecha] = useState(todayStr);
-  const [cajero, setCajero] = useState('Cajero Principal');
+  const [cajero, setCajero] = useState(currentUser?.name || 'Cajero Principal');
   const [turno, setTurno] = useState('Noche');
   
   // Financial inputs matching Image 2

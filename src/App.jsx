@@ -558,6 +558,7 @@ export default function App() {
         {/* PERFIL CAJERO */}
         {currentRole === 'cajero' && (
           <CashierView
+            currentUser={currentUser}
             dailyCloses={dailyCloses}
             onAddDailyClose={handleAddDailyClose}
           />
