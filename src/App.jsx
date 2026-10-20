@@ -482,10 +482,46 @@ export default function App() {
     }));
   };
 
+  const handleEditSupplier = (supplierId, updatedData) => {
+    updateActiveCompanyData(prev => ({
+      ...prev,
+      suppliers: (prev.suppliers || []).map(s => s.id === supplierId ? { ...s, ...updatedData } : s)
+    }));
+  };
+
   const handleDeleteSupplier = (supplierId) => {
     updateActiveCompanyData(prev => ({
       ...prev,
       suppliers: (prev.suppliers || []).filter(s => s.id !== supplierId)
+    }));
+  };
+
+  const handleDeleteSupplierInvoice = (invoiceId) => {
+    updateActiveCompanyData(prev => {
+      const inv = (prev.supplierInvoices || []).find(i => i.id === invoiceId);
+      const remainingInvoices = (prev.supplierInvoices || []).filter(i => i.id !== invoiceId);
+      
+      let updatedSuppliers = prev.suppliers || [];
+      if (inv && inv.saldoPendiente > 0) {
+        updatedSuppliers = updatedSuppliers.map(s => 
+          s.id === inv.supplierId 
+            ? { ...s, saldoPendiente: Math.max(0, (Number(s.saldoPendiente) || 0) - Number(inv.saldoPendiente)) }
+            : s
+        );
+      }
+
+      return {
+        ...prev,
+        suppliers: updatedSuppliers,
+        supplierInvoices: remainingInvoices
+      };
+    });
+  };
+
+  const handleDeleteDailyClose = (closeId) => {
+    updateActiveCompanyData(prev => ({
+      ...prev,
+      dailyCloses: (prev.dailyCloses || []).filter(c => c.id !== closeId)
     }));
   };
 
@@ -818,6 +854,7 @@ export default function App() {
               <DailyClosesReview
                 dailyCloses={dailyCloses}
                 onApproveClose={handleApproveClose}
+                onDeleteClose={handleDeleteDailyClose}
               />
             )}
 
@@ -837,8 +874,10 @@ export default function App() {
                 invoices={supplierInvoices}
                 activeCompany={activeCompany}
                 onAddSupplier={handleAddSupplier}
+                onEditSupplier={handleEditSupplier}
                 onDeleteSupplier={handleDeleteSupplier}
                 onAddInvoice={handleAddSupplierInvoice}
+                onDeleteInvoice={handleDeleteSupplierInvoice}
                 onRegisterPayment={handleRegisterSupplierPayment}
               />
             )}

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { CheckCircle2, XCircle, Clock, AlertTriangle, Eye, ArrowRight, ShieldCheck, ChevronDown, ChevronUp } from 'lucide-react';
+import { CheckCircle2, XCircle, Clock, AlertTriangle, Eye, ArrowRight, ShieldCheck, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 import { formatCurrency, formatDate } from '../utils/formatters';
 
-export default function DailyClosesReview({ dailyCloses, onApproveClose, onRejectClose }) {
+export default function DailyClosesReview({ dailyCloses, onApproveClose, onRejectClose, onDeleteClose }) {
   const [expandedCloseId, setExpandedCloseId] = useState(null);
 
   const toggleExpand = (id) => {
@@ -155,6 +155,22 @@ export default function DailyClosesReview({ dailyCloses, onApproveClose, onRejec
                         >
                           {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                         </button>
+
+                        {onDeleteClose && (
+                          <button
+                            type="button"
+                            className="btn btn-outline btn-sm"
+                            onClick={() => {
+                              if (window.confirm(`¿Estás seguro de eliminar el arqueo del cajero ${c.cajero} (${formatDate(c.fecha)})? Útil si fue de prueba o un error.`)) {
+                                onDeleteClose(c.id);
+                              }
+                            }}
+                            title="Eliminar este arqueo (prueba o error)"
+                            style={{ padding: '0.4rem 0.6rem', color: 'var(--rose-light)', borderColor: 'rgba(244, 63, 94, 0.3)' }}
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>

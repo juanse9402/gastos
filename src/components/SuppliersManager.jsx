@@ -3,7 +3,7 @@ import {
   Truck, Receipt, CreditCard, PlusCircle, Search, 
   DollarSign, Calendar, Building2, CheckCircle2, AlertCircle, 
   Phone, MessageCircle, FileText, X, ChevronRight, TrendingDown,
-  Trash2, ExternalLink, Clock, ArrowRight, ShieldCheck, Banknote
+  Trash2, ExternalLink, Clock, ArrowRight, ShieldCheck, Banknote, Edit3
 } from 'lucide-react';
 import { formatCurrency, formatDate } from '../utils/formatters';
 
@@ -12,8 +12,10 @@ export default function SuppliersManager({
   invoices = [], 
   activeCompany,
   onAddSupplier, 
+  onEditSupplier,
   onDeleteSupplier,
   onAddInvoice,
+  onDeleteInvoice,
   onRegisterPayment
 }) {
   const [activeTab, setActiveTab] = useState('suppliers'); // 'suppliers' | 'invoices' | 'payments'
@@ -22,6 +24,7 @@ export default function SuppliersManager({
 
   // Modals state
   const [isAddSupplierOpen, setIsAddSupplierOpen] = useState(false);
+  const [editingSupplier, setEditingSupplier] = useState(null);
   const [isAddInvoiceOpen, setIsAddInvoiceOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [selectedSupplierForPayment, setSelectedSupplierForPayment] = useState(null);
@@ -36,6 +39,16 @@ export default function SuppliersManager({
   const [supCity, setSupCity] = useState('');
   const [supError, setSupError] = useState('');
   const [supSuccess, setSupSuccess] = useState('');
+
+  // Edit Supplier form state
+  const [editSupName, setEditSupName] = useState('');
+  const [editSupCategory, setEditSupCategory] = useState('');
+  const [editSupContact, setEditSupContact] = useState('');
+  const [editSupPhone, setEditSupPhone] = useState('');
+  const [editSupNit, setEditSupNit] = useState('');
+  const [editSupCity, setEditSupCity] = useState('');
+  const [editSupError, setEditSupError] = useState('');
+  const [editSupSuccess, setEditSupSuccess] = useState('');
 
   // New Invoice form state
   const [invSupplierId, setInvSupplierId] = useState('');
@@ -152,6 +165,41 @@ export default function SuppliersManager({
     setTimeout(() => {
       setIsAddSupplierOpen(false);
     }, 900);
+  };
+
+  const handleOpenEditSupplier = (sup) => {
+    setEditingSupplier(sup);
+    setEditSupName(sup.name || '');
+    setEditSupCategory(sup.categoria || 'Insumos y Materia Prima');
+    setEditSupContact(sup.contacto || '');
+    setEditSupPhone(sup.telefono || '');
+    setEditSupNit(sup.nit || '');
+    setEditSupCity(sup.ciudad || 'Popayán');
+    setEditSupError('');
+    setEditSupSuccess('');
+  };
+
+  const handleEditSupplierSubmit = (e) => {
+    e.preventDefault();
+    setEditSupError('');
+    if (!editSupName.trim()) {
+      setEditSupError('El nombre del proveedor es obligatorio.');
+      return;
+    }
+    if (onEditSupplier && editingSupplier) {
+      onEditSupplier(editingSupplier.id, {
+        name: editSupName.trim(),
+        categoria: editSupCategory,
+        contacto: editSupContact.trim(),
+        telefono: editSupPhone.trim(),
+        nit: editSupNit.trim(),
+        ciudad: editSupCity.trim()
+      });
+      setEditSupSuccess('¡Proveedor actualizado con éxito!');
+      setTimeout(() => {
+        setEditingSupplier(null);
+      }, 700);
+    }
   };
 
   const handleOpenAddInvoice = (preselectedSupplierId = '') => {
@@ -458,9 +506,51 @@ export default function SuppliersManager({
                     <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', fontWeight: 700, color: 'var(--amber-light)', background: 'rgba(245, 158, 11, 0.1)', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
                       {sup.categoria}
                     </div>
-                    {sup.nit && (
-                      <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>NIT: {sup.nit}</span>
-                    )}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                      {sup.nit && (
+                        <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>NIT: {sup.nit}</span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => handleOpenEditSupplier(sup)}
+                        title="Editar datos del proveedor"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          border: '1px solid var(--border-subtle)',
+                          borderRadius: '6px',
+                          color: 'var(--amber-light)',
+                          cursor: 'pointer',
+                          padding: '0.2rem 0.4rem',
+                          display: 'inline-flex',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <Edit3 size={12} />
+                      </button>
+                      {onDeleteSupplier && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (window.confirm(`¿Estás seguro de eliminar al proveedor "${sup.name}"? Los datos de este proveedor serán eliminados.`)) {
+                              onDeleteSupplier(sup.id);
+                            }
+                          }}
+                          title="Eliminar Proveedor (Prueba o Error)"
+                          style={{
+                            background: 'rgba(244, 63, 94, 0.1)',
+                            border: '1px solid rgba(244, 63, 94, 0.25)',
+                            borderRadius: '6px',
+                            color: 'var(--rose-light)',
+                            cursor: 'pointer',
+                            padding: '0.2rem 0.4rem',
+                            display: 'inline-flex',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#fff', margin: '0.35rem 0' }}>
@@ -640,19 +730,45 @@ export default function SuppliersManager({
                       </td>
 
                       <td style={{ padding: '0.85rem 1.25rem', textAlign: 'right' }}>
-                        {!isPaid ? (
-                          <button
-                            type="button"
-                            className="btn btn-primary btn-sm"
-                            onClick={() => handleOpenPayment(null, inv)}
-                            style={{ padding: '0.25rem 0.65rem', fontSize: '0.75rem' }}
-                          >
-                            <CreditCard size={12} />
-                            <span>Pagar</span>
-                          </button>
-                        ) : (
-                          <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Saldada</span>
-                        )}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.45rem' }}>
+                          {!isPaid ? (
+                            <button
+                              type="button"
+                              className="btn btn-primary btn-sm"
+                              onClick={() => handleOpenPayment(null, inv)}
+                              style={{ padding: '0.25rem 0.65rem', fontSize: '0.75rem' }}
+                            >
+                              <CreditCard size={12} />
+                              <span>Pagar</span>
+                            </button>
+                          ) : (
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Saldada</span>
+                          )}
+
+                          {onDeleteInvoice && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (window.confirm(`¿Estás seguro de eliminar la factura "${inv.numeroFactura}"? Si fue una factura de prueba o errónea, esto recalculará y descontará el saldo pendiente.`)) {
+                                  onDeleteInvoice(inv.id);
+                                }
+                              }}
+                              title="Eliminar factura (error o prueba)"
+                              style={{
+                                background: 'rgba(244, 63, 94, 0.1)',
+                                border: '1px solid rgba(244, 63, 94, 0.25)',
+                                color: 'var(--rose-light)',
+                                borderRadius: '6px',
+                                padding: '0.3rem 0.45rem',
+                                cursor: 'pointer',
+                                display: 'inline-flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );
@@ -855,6 +971,130 @@ export default function SuppliersManager({
                   className="btn btn-primary"
                 >
                   Guardar Proveedor
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL EDITAR PROVEEDOR */}
+      {editingSupplier && (
+        <div className="modal-overlay" onClick={() => setEditingSupplier(null)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '460px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Edit3 size={20} style={{ color: 'var(--amber-light)' }} />
+                <h3 style={{ margin: 0, fontSize: '1.2rem' }}>Editar Proveedor</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingSupplier(null)}
+                style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {editSupError && (
+              <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid var(--rose-primary)', color: '#fca5a5', padding: '0.65rem', borderRadius: '8px', fontSize: '0.85rem', marginBottom: '1rem' }}>
+                {editSupError}
+              </div>
+            )}
+
+            {editSupSuccess && (
+              <div style={{ background: 'rgba(16, 185, 129, 0.15)', border: '1px solid var(--emerald-primary)', color: 'var(--emerald-light)', padding: '0.65rem', borderRadius: '8px', fontSize: '0.85rem', marginBottom: '1rem' }}>
+                {editSupSuccess}
+              </div>
+            )}
+
+            <form onSubmit={handleEditSupplierSubmit}>
+              <div className="form-group">
+                <label className="form-label">Nombre del Proveedor / Razón Social</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={editSupName}
+                  onChange={e => setEditSupName(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Categoría de Insumo</label>
+                <select
+                  className="form-control"
+                  value={editSupCategory}
+                  onChange={e => setEditSupCategory(e.target.value)}
+                >
+                  <option value="Papa y Tubérculos">Papa y Tubérculos</option>
+                  <option value="Carnes & Embutidos">Carnes & Embutidos</option>
+                  <option value="Bebidas y Licores">Bebidas y Licores</option>
+                  <option value="Salsas & Condimentos">Salsas & Condimentos</option>
+                  <option value="Empaques & Desechables">Empaques & Desechables</option>
+                  <option value="Aseo y Mantenimiento">Aseo y Mantenimiento</option>
+                  <option value="Servicios y Arriendos">Servicios y Arriendos</option>
+                  <option value="Insumos y Materia Prima">Insumos y Materia Prima (General)</option>
+                </select>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                <div className="form-group">
+                  <label className="form-label">Contacto / Vendedor</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={editSupContact}
+                    onChange={e => setEditSupContact(e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Teléfono / WhatsApp</label>
+                  <input
+                    type="tel"
+                    className="form-control"
+                    value={editSupPhone}
+                    onChange={e => setEditSupPhone(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                <div className="form-group">
+                  <label className="form-label">NIT / Cédula</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={editSupNit}
+                    onChange={e => setEditSupNit(e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Ciudad</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={editSupCity}
+                    onChange={e => setEditSupCity(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={() => setEditingSupplier(null)}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                >
+                  Guardar Cambios
                 </button>
               </div>
             </form>
