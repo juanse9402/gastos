@@ -62,7 +62,7 @@ export default function AuthPortal({
     );
 
     if (!user) {
-      setLoginError('Correo o contraseña incorrectos. Verifica tus datos o usa los accesos de prueba.');
+      setLoginError('Correo o contraseña incorrectos. Por favor verifica tus credenciales.');
       return;
     }
 
@@ -73,18 +73,6 @@ export default function AuthPortal({
     }
 
     onLogin(user, company);
-  };
-
-  const handleQuickDemoLogin = (email, pass) => {
-    setLoginEmail(email);
-    setLoginPassword(pass);
-    setLoginError('');
-    
-    const user = users.find(u => u.email === email && u.password === pass);
-    if (user) {
-      const comp = companies.find(c => c.id === user.companyId);
-      setTimeout(() => onLogin(user, comp), 100);
-    }
   };
 
   const handleRegisterSubmit = (e) => {
@@ -405,89 +393,6 @@ export default function AuthPortal({
                 <ArrowRight size={18} />
               </button>
             </form>
-
-            {/* Quick Demo Access Bar */}
-            <div style={{ marginTop: '1.75rem', borderTop: '1px solid var(--border-subtle)', paddingTop: '1.25rem' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.05em', marginBottom: '0.75rem', textAlign: 'center' }}>
-                ⚡ Clientes Registrados en Quadra (Prueba Multi-Tenant):
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
-                {/* Cliente 1: La Papería */}
-                <button
-                  type="button"
-                  className="btn btn-outline btn-sm"
-                  style={{ justifyContent: 'flex-start', padding: '0.65rem 0.75rem', borderColor: 'rgba(245, 158, 11, 0.3)' }}
-                  onClick={() => handleQuickDemoLogin('admin@lapaperia.com', '1234')}
-                  title="Cargar La Papería como Gerente"
-                >
-                  <span style={{ fontSize: '1.2rem' }}>🍟</span>
-                  <div style={{ textAlign: 'left', overflow: 'hidden' }}>
-                    <div style={{ fontWeight: 700, color: 'var(--amber-light)', fontSize: '0.8rem', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-                      Admin: La Papería
-                    </div>
-                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
-                      admin@lapaperia.com
-                    </div>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  className="btn btn-outline btn-sm"
-                  style={{ justifyContent: 'flex-start', padding: '0.65rem 0.75rem', borderColor: 'rgba(16, 185, 129, 0.3)' }}
-                  onClick={() => handleQuickDemoLogin('cajero@lapaperia.com', '1234')}
-                  title="Cargar La Papería como Cajero"
-                >
-                  <span style={{ fontSize: '1.2rem' }}>💵</span>
-                  <div style={{ textAlign: 'left', overflow: 'hidden' }}>
-                    <div style={{ fontWeight: 700, color: 'var(--emerald-light)', fontSize: '0.8rem', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-                      Cajero: La Papería
-                    </div>
-                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
-                      cajero@lapaperia.com
-                    </div>
-                  </div>
-                </button>
-
-                {/* Empresa 2: Café Central */}
-                <button
-                  type="button"
-                  className="btn btn-outline btn-sm"
-                  style={{ justifyContent: 'flex-start', padding: '0.65rem 0.75rem', borderColor: 'rgba(59, 130, 246, 0.3)' }}
-                  onClick={() => handleQuickDemoLogin('gerencia@cafecentral.com', '1234')}
-                  title="Cargar Café Central como Gerente"
-                >
-                  <span style={{ fontSize: '1.2rem' }}>☕</span>
-                  <div style={{ textAlign: 'left', overflow: 'hidden' }}>
-                    <div style={{ fontWeight: 700, color: 'var(--blue-primary)', fontSize: '0.8rem', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-                      Admin: Café Central
-                    </div>
-                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
-                      gerencia@cafecentral.com
-                    </div>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  className="btn btn-outline btn-sm"
-                  style={{ justifyContent: 'flex-start', padding: '0.65rem 0.75rem', borderColor: 'rgba(139, 92, 246, 0.3)' }}
-                  onClick={() => handleQuickDemoLogin('caja@cafecentral.com', '1234')}
-                  title="Cargar Café Central como Cajero"
-                >
-                  <span style={{ fontSize: '1.2rem' }}>☕</span>
-                  <div style={{ textAlign: 'left', overflow: 'hidden' }}>
-                    <div style={{ fontWeight: 700, color: 'var(--purple-primary)', fontSize: '0.8rem', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-                      Cajero: Café Central
-                    </div>
-                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
-                      caja@cafecentral.com
-                    </div>
-                  </div>
-                </button>
-              </div>
-            </div>
           </div>
         )}
 
