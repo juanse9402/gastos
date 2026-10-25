@@ -32,160 +32,69 @@ export default function Navbar({
 
   return (
     <header className="header-nav">
-      {/* TIER 1: Branding, Workspace & User Profile */}
+      {/* TIER 1: Branding, Workspace, Status & User Profile */}
       <div className="nav-header-row-1">
         {/* SaaS Platform Branding & Active Client Tenant */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: 0 }}>
           {/* Quadra SaaS Logo */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexShrink: 0 }}>
             <div style={{
-              width: '34px',
-              height: '34px',
-              borderRadius: '10px',
+              width: '32px',
+              height: '32px',
+              borderRadius: '9px',
               background: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#fff',
               fontWeight: 900,
-              fontSize: '1.15rem',
-              boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)',
+              fontSize: '1.05rem',
+              boxShadow: '0 4px 12px rgba(16, 185, 129, 0.35)',
               letterSpacing: '-0.03em',
               flexShrink: 0
             }}>
               Q
             </div>
-            <div>
-              <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-                QUADRA <span style={{ fontSize: '0.65rem', fontWeight: 700, padding: '0.12rem 0.35rem', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.3)', verticalAlign: 'middle' }}>CLOUD</span>
+            <div className="hide-on-mobile">
+              <div style={{ fontSize: '1rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
+                QUADRA <span style={{ fontSize: '0.62rem', fontWeight: 700, padding: '0.1rem 0.3rem', borderRadius: '5px', background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.3)', verticalAlign: 'middle' }}>CLOUD</span>
               </div>
-              <div className="logo-title-sub" style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <div className="logo-title-sub" style={{ fontSize: '0.62rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 Finanzas
               </div>
             </div>
           </div>
 
           {/* Divider */}
-          <div style={{ width: '1px', height: '24px', background: 'var(--border-subtle)', margin: '0 0.1rem' }} />
+          <div className="hide-on-mobile" style={{ width: '1px', height: '22px', background: 'var(--border-subtle)', margin: '0 0.1rem' }} />
 
           {/* Client Workspace Badge */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.45rem',
+            gap: '0.4rem',
             background: 'rgba(255, 255, 255, 0.03)',
             border: '1px solid var(--border-subtle)',
-            padding: '0.25rem 0.65rem',
-            borderRadius: '10px'
+            padding: '0.25rem 0.55rem',
+            borderRadius: '9px',
+            minWidth: 0
           }}>
-            <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>
+            <span style={{ fontSize: '1.1rem', lineHeight: 1, flexShrink: 0 }}>
               {activeCompany?.emoji || '🍟'}
             </span>
-            <div>
-              <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#fff', lineHeight: 1.1 }}>
+            <div style={{ minWidth: 0, overflow: 'hidden' }}>
+              <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#fff', lineHeight: 1.1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {activeCompany?.name || 'La Papería'}
               </div>
-              <div className="nav-company-name-sub" style={{ fontSize: '0.65rem', color: 'var(--amber-light)', fontWeight: 600 }}>
+              <div className="nav-company-name-sub" style={{ fontSize: '0.62rem', color: 'var(--amber-light)', fontWeight: 600 }}>
                 {activeCompany?.industry || 'Comidas'}
               </div>
             </div>
           </div>
         </div>
 
-        {/* User Profile & Logout (Top Right on Mobile) */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          background: 'var(--bg-secondary)',
-          padding: '0.25rem 0.55rem',
-          borderRadius: '10px',
-          border: '1px solid var(--border-subtle)'
-        }}>
-          <div style={{
-            width: '26px',
-            height: '26px',
-            borderRadius: '50%',
-            background: currentUser?.role === 'admin' ? 'var(--amber-glow)' : 'var(--emerald-glow)',
-            color: currentUser?.role === 'admin' ? 'var(--amber-light)' : 'var(--emerald-light)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '0.75rem',
-            fontWeight: 'bold',
-            flexShrink: 0
-          }}>
-            {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
-          </div>
-          
-          <div className="hide-on-mobile" style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#fff' }}>
-              {currentUser?.name || 'Usuario'}
-            </span>
-            <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)' }}>
-              {currentUser?.email || ''}
-            </span>
-          </div>
-
-          <button
-            type="button"
-            onClick={onLogout}
-            className="btn btn-outline btn-sm"
-            style={{ padding: '0.2rem 0.45rem', color: 'var(--rose-light)', borderColor: 'rgba(244, 63, 94, 0.25)' }}
-            title="Cerrar Sesión / Salir"
-          >
-            <LogOut size={13} />
-          </button>
-        </div>
-      </div>
-
-      {/* TIER 2: Controls, Role Switcher & Database Status */}
-      <div className="nav-header-row-2">
-        {/* Role Switcher */}
-        <div className="role-switcher">
-          <button
-            type="button"
-            className={`role-btn ${currentRole === 'cajero' ? 'active cashier' : ''}`}
-            onClick={() => onSelectRole('cajero')}
-          >
-            <UserCheck size={14} />
-            <span>Cajero</span>
-          </button>
-          
-          <button
-            type="button"
-            className={`role-btn ${currentRole === 'admin' ? 'active admin' : ''}`}
-            onClick={() => onSelectRole('admin')}
-            style={{ position: 'relative' }}
-          >
-            <ShieldCheck size={14} />
-            <span>Administrador</span>
-            {closesPendingCount > 0 && (
-              <span
-                style={{
-                  position: 'absolute',
-                  top: '-4px',
-                  right: '-4px',
-                  background: 'var(--rose-primary)',
-                  color: '#fff',
-                  borderRadius: '50%',
-                  width: '16px',
-                  height: '16px',
-                  fontSize: '0.6rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 'bold',
-                  boxShadow: '0 2px 6px rgba(244,63,94,0.5)'
-                }}
-              >
-                {closesPendingCount}
-              </span>
-            )}
-          </button>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+        {/* Right Action Group: DB Status, Export, User & Logout */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
           {/* Supabase Cloud Status Indicator */}
           <button
             type="button"
@@ -198,7 +107,7 @@ export default function Navbar({
               borderRadius: '8px',
               borderColor: dbStatus?.initialized ? 'rgba(16, 185, 129, 0.4)' : 'rgba(245, 158, 11, 0.4)',
               background: dbStatus?.initialized ? 'rgba(16, 185, 129, 0.08)' : 'rgba(245, 158, 11, 0.08)',
-              padding: '0.3rem 0.55rem',
+              padding: '0.25rem 0.5rem',
               cursor: 'pointer'
             }}
             title="Estado de base de datos Supabase"
@@ -211,16 +120,10 @@ export default function Navbar({
               boxShadow: `0 0 6px ${dbStatus?.initialized ? '#10b981' : '#f59e0b'}`
             }} />
             <Database size={13} style={{ color: dbStatus?.initialized ? '#34d399' : '#fbbf24' }} />
-            <span style={{ fontSize: '0.74rem', fontWeight: 600, color: dbStatus?.initialized ? '#34d399' : '#fbbf24' }}>
-              {dbStatus?.initialized ? 'Supabase' : 'DB Config'}
+            <span className="hide-on-mobile" style={{ fontSize: '0.74rem', fontWeight: 600, color: dbStatus?.initialized ? '#34d399' : '#fbbf24' }}>
+              {dbStatus?.initialized ? 'Supabase' : 'DB'}
             </span>
           </button>
-
-          {/* Live Clock (Hidden on very narrow screens) */}
-          <div className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-            <Clock size={13} style={{ color: 'var(--amber-primary)' }} />
-            <span>{timeStr}</span>
-          </div>
 
           {/* Export Button (Admin only) */}
           {currentRole === 'admin' && (
@@ -229,12 +132,107 @@ export default function Navbar({
               className="btn btn-outline btn-sm"
               onClick={onOpenExport}
               title="Exportar información a Excel o respaldos"
-              style={{ padding: '0.3rem 0.55rem' }}
+              style={{ padding: '0.25rem 0.5rem' }}
             >
               <Download size={13} />
               <span className="hide-on-mobile">Exportar</span>
             </button>
           )}
+
+          {/* Live Clock (Desktop only) */}
+          <div className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--text-muted)', fontSize: '0.8rem', paddingLeft: '0.25rem' }}>
+            <Clock size={13} style={{ color: 'var(--amber-primary)' }} />
+            <span>{timeStr}</span>
+          </div>
+
+          {/* User Profile & Logout */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            background: 'var(--bg-secondary)',
+            padding: '0.2rem 0.45rem',
+            borderRadius: '9px',
+            border: '1px solid var(--border-subtle)'
+          }}>
+            <div style={{
+              width: '24px',
+              height: '24px',
+              borderRadius: '50%',
+              background: currentUser?.role === 'admin' ? 'var(--amber-glow)' : 'var(--emerald-glow)',
+              color: currentUser?.role === 'admin' ? 'var(--amber-light)' : 'var(--emerald-light)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '0.72rem',
+              fontWeight: 'bold',
+              flexShrink: 0
+            }}>
+              {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
+            </div>
+            
+            <div className="hide-on-mobile" style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#fff' }}>
+                {currentUser?.name || 'Usuario'}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={onLogout}
+              className="btn btn-outline btn-sm"
+              style={{ padding: '0.15rem 0.35rem', minHeight: '26px', color: 'var(--rose-light)', borderColor: 'rgba(244, 63, 94, 0.25)' }}
+              title="Cerrar Sesión / Salir"
+            >
+              <LogOut size={12} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* TIER 2: Role Switcher (100% width on mobile) */}
+      <div className="nav-header-row-2">
+        <div className="role-switcher">
+          <button
+            type="button"
+            className={`role-btn ${currentRole === 'cajero' ? 'active cashier' : ''}`}
+            onClick={() => onSelectRole('cajero')}
+          >
+            <UserCheck size={15} />
+            <span>Cajero</span>
+          </button>
+          
+          <button
+            type="button"
+            className={`role-btn ${currentRole === 'admin' ? 'active admin' : ''}`}
+            onClick={() => onSelectRole('admin')}
+            style={{ position: 'relative' }}
+          >
+            <ShieldCheck size={15} />
+            <span>Administrador</span>
+            {closesPendingCount > 0 && (
+              <span
+                style={{
+                  position: 'absolute',
+                  top: '-4px',
+                  right: '-4px',
+                  background: 'var(--rose-primary)',
+                  color: '#fff',
+                  borderRadius: '50%',
+                  width: '18px',
+                  height: '18px',
+                  fontSize: '0.65rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 'bold',
+                  boxShadow: '0 2px 6px rgba(244,63,94,0.5)'
+                }}
+              >
+                {closesPendingCount}
+              </span>
+            )}
+          </button>
         </div>
       </div>
     </header>

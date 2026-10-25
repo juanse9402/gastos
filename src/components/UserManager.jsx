@@ -180,7 +180,7 @@ export default function UserManager({
           <h3 style={{ fontSize: '1rem', fontWeight: 700, margin: 0 }}>Listado de Usuarios Registrados</h3>
         </div>
 
-        <div style={{ overflowX: 'auto' }}>
+        <div className="hide-on-mobile" style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
               <tr style={{ background: 'rgba(0, 0, 0, 0.2)', borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-dim)', fontSize: '0.75rem', textTransform: 'uppercase' }}>
@@ -296,6 +296,105 @@ export default function UserManager({
               })}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile View: High-density user cards */}
+        <div className="show-on-mobile" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '0.85rem' }}>
+          {companyUsers.map(user => {
+            const isAdmin = user.role === 'admin';
+            const isCurrent = user.id === currentUser?.id;
+
+            return (
+              <div key={user.id} className="mobile-data-card">
+                {/* Top: Avatar, Name & Role */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                    <div style={{
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '10px',
+                      background: isAdmin ? 'var(--amber-glow)' : 'var(--blue-glow)',
+                      color: isAdmin ? 'var(--amber-light)' : 'var(--blue-light)',
+                      border: `1px solid ${isAdmin ? 'rgba(245, 158, 11, 0.3)' : 'rgba(59, 130, 246, 0.3)'}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 800,
+                      fontSize: '1rem',
+                      flexShrink: 0
+                    }}>
+                      {user.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 700, color: '#fff', fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        {user.name}
+                        {isCurrent && (
+                          <span style={{ fontSize: '0.65rem', background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', padding: '0.1rem 0.4rem', borderRadius: '6px' }}>
+                            Tú
+                          </span>
+                        )}
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                        {user.email}
+                      </div>
+                    </div>
+                  </div>
+
+                  <span style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    padding: '0.2rem 0.6rem',
+                    borderRadius: '999px',
+                    fontSize: '0.72rem',
+                    fontWeight: 700,
+                    background: isAdmin ? 'rgba(245, 158, 11, 0.15)' : 'rgba(59, 130, 246, 0.15)',
+                    color: isAdmin ? 'var(--amber-light)' : 'var(--blue-light)',
+                    border: `1px solid ${isAdmin ? 'rgba(245, 158, 11, 0.35)' : 'rgba(59, 130, 246, 0.35)'}`
+                  }}>
+                    {isAdmin ? <ShieldCheck size={12} /> : <UserCheck size={12} />}
+                    {isAdmin ? 'Admin' : 'Cajero'}
+                  </span>
+                </div>
+
+                {/* Bottom: Password & Actions */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '0.65rem', marginTop: '0.25rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ fontFamily: 'monospace', letterSpacing: '0.15em', background: 'rgba(0, 0, 0, 0.3)', padding: '0.2rem 0.5rem', borderRadius: '6px', fontSize: '0.8rem' }}>
+                      ••••
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleOpenEdit(user)}
+                      className="btn btn-outline btn-sm"
+                      style={{ padding: '0.3rem 0.65rem', fontSize: '0.75rem', minHeight: '34px', color: 'var(--amber-light)', borderColor: 'rgba(245, 158, 11, 0.3)' }}
+                    >
+                      <KeyRound size={13} />
+                      <span>PIN</span>
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(user)}
+                    disabled={isCurrent}
+                    className="btn btn-outline btn-sm"
+                    style={{
+                      minHeight: '34px',
+                      minWidth: '34px',
+                      padding: '0.3rem 0.6rem',
+                      color: isCurrent ? 'var(--text-dim)' : 'var(--rose-light)',
+                      borderColor: isCurrent ? 'transparent' : 'rgba(244, 63, 94, 0.25)',
+                      cursor: isCurrent ? 'not-allowed' : 'pointer'
+                    }}
+                    title={isCurrent ? 'No puedes eliminarte a ti mismo' : 'Eliminar usuario'}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

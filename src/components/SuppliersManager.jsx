@@ -666,7 +666,7 @@ export default function SuppliersManager({
             </button>
           </div>
 
-          <div style={{ overflowX: 'auto' }}>
+          <div className="hide-on-mobile" style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
                 <tr style={{ background: 'rgba(0, 0, 0, 0.25)', borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-dim)', fontSize: '0.75rem', textTransform: 'uppercase' }}>
@@ -776,6 +776,110 @@ export default function SuppliersManager({
               </tbody>
             </table>
           </div>
+
+          {/* Mobile View: High-density invoice cards */}
+          <div className="show-on-mobile" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '0.85rem' }}>
+            {filteredInvoices.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-dim)', fontSize: '0.9rem' }}>
+                No hay facturas con los filtros seleccionados.
+              </div>
+            ) : (
+              filteredInvoices.map(inv => {
+                const isPaid = inv.estado === 'Pagado';
+                const isPartial = inv.estado === 'Parcial';
+
+                return (
+                  <div key={inv.id} className="mobile-data-card">
+                    {/* Top: Date, Vence & Estado */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem' }}>
+                        <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{formatDate(inv.fecha)}</span>
+                        <span style={{ color: isPaid ? 'var(--text-dim)' : 'var(--amber-light)', display: 'flex', alignItems: 'center', gap: '0.2rem', fontSize: '0.72rem' }}>
+                          <Clock size={11} />
+                          Vence: {formatDate(inv.fechaVencimiento)}
+                        </span>
+                      </div>
+
+                      <span style={{
+                        padding: '0.2rem 0.55rem',
+                        borderRadius: '999px',
+                        fontSize: '0.7rem',
+                        fontWeight: 700,
+                        background: isPaid ? 'rgba(16, 185, 129, 0.15)' : (isPartial ? 'rgba(245, 158, 11, 0.15)' : 'rgba(244, 63, 94, 0.15)'),
+                        color: isPaid ? '#34d399' : (isPartial ? 'var(--amber-light)' : '#fb7185'),
+                        border: `1px solid ${isPaid ? 'rgba(16, 185, 129, 0.3)' : (isPartial ? 'rgba(245, 158, 11, 0.3)' : 'rgba(244, 63, 94, 0.3)')}`
+                      }}>
+                        {inv.estado}
+                      </span>
+                    </div>
+
+                    {/* Middle: Supplier & Factura */}
+                    <div>
+                      <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.95rem', margin: '0.25rem 0 0.15rem' }}>
+                        {inv.supplierName}
+                      </div>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                        Factura: <code style={{ color: 'var(--amber-light)' }}>{inv.numeroFactura}</code> {inv.descripcion && `• ${inv.descripcion}`}
+                      </div>
+                    </div>
+
+                    {/* Numbers: Total & Saldo */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', background: 'rgba(0,0,0,0.2)', padding: '0.5rem 0.75rem', borderRadius: '8px' }}>
+                      <div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Total Factura</div>
+                        <div style={{ fontWeight: 700, color: '#fff', fontSize: '0.92rem' }}>{formatCurrency(inv.total)}</div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Saldo Pendiente</div>
+                        <div style={{ fontWeight: 800, color: isPaid ? '#34d399' : '#fb7185', fontSize: '0.92rem' }}>{formatCurrency(inv.saldoPendiente)}</div>
+                      </div>
+                    </div>
+
+                    {/* Bottom: Action buttons */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem', borderTop: '1px solid var(--border-subtle)', paddingTop: '0.65rem', marginTop: '0.25rem' }}>
+                      {!isPaid && (
+                        <button
+                          type="button"
+                          className="btn btn-primary btn-sm"
+                          onClick={() => handleOpenPayment(null, inv)}
+                          style={{ flex: 1, minHeight: '38px', justifyContent: 'center' }}
+                        >
+                          <CreditCard size={14} />
+                          <span>Pagar / Abonar</span>
+                        </button>
+                      )}
+
+                      {onDeleteInvoice && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (window.confirm(`¿Estás seguro de eliminar la factura "${inv.numeroFactura}"?`)) {
+                              onDeleteInvoice(inv.id);
+                            }
+                          }}
+                          title="Eliminar factura"
+                          style={{
+                            background: 'rgba(244, 63, 94, 0.1)',
+                            border: '1px solid rgba(244, 63, 94, 0.25)',
+                            color: 'var(--rose-light)',
+                            borderRadius: '8px',
+                            minHeight: '38px',
+                            minWidth: '38px',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
         </div>
       )}
 
@@ -786,7 +890,7 @@ export default function SuppliersManager({
             <h3 style={{ fontSize: '0.95rem', margin: 0 }}>Historial de Salidas de Dinero por Pagos a Proveedores</h3>
           </div>
 
-          <div style={{ overflowX: 'auto' }}>
+          <div className="hide-on-mobile" style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
                 <tr style={{ background: 'rgba(0, 0, 0, 0.25)', borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-dim)', fontSize: '0.75rem', textTransform: 'uppercase' }}>
@@ -846,6 +950,61 @@ export default function SuppliersManager({
                 })}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile View: High-density payment cards */}
+          <div className="show-on-mobile" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '0.85rem' }}>
+            {allPayments.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-dim)', fontSize: '0.9rem' }}>
+                No hay pagos registrados todavía.
+              </div>
+            ) : (
+              allPayments.map((p, idx) => {
+                const isCash = p.metodo === 'Efectivo';
+                return (
+                  <div key={p.id || idx} className="mobile-data-card">
+                    {/* Top: Date & Method */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+                      <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)', fontWeight: 600 }}>{formatDate(p.fecha)}</span>
+                      <span style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                        padding: '0.15rem 0.5rem',
+                        borderRadius: '8px',
+                        fontSize: '0.72rem',
+                        fontWeight: 700,
+                        background: isCash ? 'rgba(16, 185, 129, 0.15)' : 'rgba(59, 130, 246, 0.15)',
+                        color: isCash ? '#34d399' : 'var(--blue-light)',
+                        border: `1px solid ${isCash ? 'rgba(16, 185, 129, 0.3)' : 'rgba(59, 130, 246, 0.3)'}`
+                      }}>
+                        {isCash ? <Banknote size={12} /> : <CreditCard size={12} />}
+                        {isCash ? 'Efectivo' : 'Banco'}
+                      </span>
+                    </div>
+
+                    {/* Middle: Supplier & Factura */}
+                    <div>
+                      <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.95rem', margin: '0.2rem 0 0.1rem' }}>
+                        {p.supplierName}
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                        Factura: <code style={{ color: 'var(--amber-light)' }}>{p.numeroFactura}</code>
+                        {p.notas && <span> • {p.notas}</span>}
+                      </div>
+                    </div>
+
+                    {/* Bottom: Monto Pagado */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-subtle)', paddingTop: '0.65rem', marginTop: '0.25rem' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Monto Pagado:</span>
+                      <span style={{ fontWeight: 900, fontSize: '1.15rem', color: 'var(--emerald-light)', fontFamily: 'Outfit, sans-serif' }}>
+                        {formatCurrency(p.monto)}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       )}

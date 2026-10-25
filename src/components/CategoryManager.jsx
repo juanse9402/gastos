@@ -23,7 +23,7 @@ export default function CategoryManager({ categories, onAddCategory, onDeleteCat
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div>
-        <h2 style={{ fontSize: '1.4rem' }}>Administración de Categorías de La Papería</h2>
+        <h2 style={{ fontSize: 'clamp(1.15rem, 4vw, 1.4rem)' }}>Administración de Categorías de La Papería</h2>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
           Configura y personaliza los conceptos de gastos e ingresos del negocio.
         </p>

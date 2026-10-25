@@ -184,7 +184,7 @@ export default function TransactionsTable({ transactions, categories, onAddTrans
               </select>
             </div>
 
-            <div className="form-group" style={{ gridColumn: 'span 2' }}>
+            <div className="form-group" style={{ gridColumn: '1 / -1' }}>
               <label className="form-label">Descripción del Concepto</label>
               <input
                 type="text"
@@ -200,8 +200,8 @@ export default function TransactionsTable({ transactions, categories, onAddTrans
           <div style={{ textAlign: 'right', marginTop: '1rem' }}>
             <button
               type="submit"
-              className={tipo === 'Ingreso' ? 'btn btn-emerald' : 'btn btn-primary'}
-              style={{ padding: '0.75rem 2rem' }}
+              className={tipo === 'Ingreso' ? 'btn btn-emerald stack-on-mobile' : 'btn btn-primary stack-on-mobile'}
+              style={{ padding: '0.75rem 2rem', minHeight: '44px', justifyContent: 'center' }}
             >
               <Plus size={18} />
               Registrar {tipo}
@@ -302,7 +302,7 @@ export default function TransactionsTable({ transactions, categories, onAddTrans
           </div>
         </div>
 
-        <div className="table-responsive">
+        <div className="table-responsive hide-on-mobile">
           <table className="custom-table">
             <thead>
               <tr>
@@ -494,6 +494,167 @@ export default function TransactionsTable({ transactions, categories, onAddTrans
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile View: High-density interactive cards */}
+        <div className="show-on-mobile" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {filteredTransactions.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-dim)', fontSize: '0.9rem' }}>
+              No se encontraron transacciones con los filtros seleccionados.
+            </div>
+          ) : (
+            filteredTransactions.map(tx => {
+              const isEditing = editingId === tx.id;
+
+              if (isEditing) {
+                return (
+                  <div key={tx.id} className="mobile-data-card" style={{ borderColor: 'var(--amber-primary)', background: 'rgba(245, 158, 11, 0.08)' }}>
+                    <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--amber-light)', marginBottom: '0.5rem' }}>
+                      Editando Movimiento
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      <input
+                        type="date"
+                        className="form-control"
+                        value={editFormData.fecha}
+                        onChange={e => setEditFormData({ ...editFormData, fecha: e.target.value })}
+                      />
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Descripción"
+                        value={editFormData.descripcion}
+                        onChange={e => setEditFormData({ ...editFormData, descripcion: e.target.value })}
+                      />
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                        <select
+                          className="form-control"
+                          value={editFormData.tipo}
+                          onChange={e => setEditFormData({ ...editFormData, tipo: e.target.value })}
+                        >
+                          <option value="Gasto">Gasto</option>
+                          <option value="Ingreso">Ingreso</option>
+                        </select>
+                        <select
+                          className="form-control"
+                          value={editFormData.metodo}
+                          onChange={e => setEditFormData({ ...editFormData, metodo: e.target.value })}
+                        >
+                          <option value="Banco">🏦 Banco</option>
+                          <option value="Efectivo">💵 Efectivo</option>
+                        </select>
+                      </div>
+                      <select
+                        className="form-control"
+                        value={editFormData.categoria}
+                        onChange={e => setEditFormData({ ...editFormData, categoria: e.target.value })}
+                      >
+                        {categories.map(c => (
+                          <option key={c.id} value={c.name}>{c.name}</option>
+                        ))}
+                      </select>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="Monto"
+                        value={editFormData.monto}
+                        onChange={e => setEditFormData({ ...editFormData, monto: parseFloat(e.target.value) || 0 })}
+                        style={{ fontWeight: 'bold' }}
+                      />
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: '0.25rem' }}>
+                        <button type="button" className="btn btn-emerald btn-sm" onClick={saveEdit} style={{ minHeight: '38px', justifyContent: 'center' }}>
+                          <Check size={15} /> Guardar
+                        </button>
+                        <button type="button" className="btn btn-outline btn-sm" onClick={() => setEditingId(null)} style={{ minHeight: '38px', justifyContent: 'center' }}>
+                          <X size={15} /> Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <div key={tx.id} className="mobile-data-card">
+                  {/* Top: Date & Badges */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)', fontWeight: 600 }}>{formatDate(tx.fecha)}</span>
+                      <span style={{
+                        padding: '0.15rem 0.5rem',
+                        borderRadius: '999px',
+                        fontSize: '0.7rem',
+                        fontWeight: 700,
+                        background: tx.tipo === 'Ingreso' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(244, 63, 94, 0.15)',
+                        color: tx.tipo === 'Ingreso' ? 'var(--emerald-light)' : 'var(--rose-light)'
+                      }}>
+                        {tx.tipo}
+                      </span>
+                    </div>
+
+                    <span style={{
+                      padding: '0.15rem 0.5rem',
+                      borderRadius: '8px',
+                      fontSize: '0.72rem',
+                      fontWeight: 600,
+                      background: tx.metodo === 'Efectivo' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(59, 130, 246, 0.12)',
+                      color: tx.metodo === 'Efectivo' ? 'var(--emerald-light)' : 'var(--blue-primary)',
+                      border: tx.metodo === 'Efectivo' ? '1px solid rgba(16, 185, 129, 0.25)' : '1px solid rgba(59, 130, 246, 0.25)'
+                    }}>
+                      {tx.metodo === 'Efectivo' ? '💵 Efectivo' : '🏦 Banco'}
+                    </span>
+                  </div>
+
+                  {/* Middle: Description & Category */}
+                  <div>
+                    <div style={{ fontWeight: 700, color: '#fff', fontSize: '0.92rem', margin: '0.25rem 0 0.15rem' }}>
+                      {tx.descripcion}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                      Categoría: <strong style={{ color: 'var(--amber-light)' }}>{tx.categoria}</strong>
+                    </div>
+                  </div>
+
+                  {/* Bottom: Monto & Actions */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '0.65rem', marginTop: '0.25rem' }}>
+                    <div style={{
+                      fontFamily: 'Outfit, sans-serif',
+                      fontWeight: 800,
+                      fontSize: '1.15rem',
+                      color: tx.tipo === 'Ingreso' ? 'var(--emerald-light)' : 'var(--text-main)'
+                    }}>
+                      {tx.tipo === 'Ingreso' ? '+' : '-'} {formatCurrency(tx.monto)}
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '0.4rem' }}>
+                      <button
+                        type="button"
+                        className="btn btn-outline btn-sm"
+                        style={{ minHeight: '36px', minWidth: '36px', padding: '0.35rem 0.6rem' }}
+                        onClick={() => startEdit(tx)}
+                        title="Editar transacción"
+                      >
+                        <Edit3 size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm"
+                        style={{ minHeight: '36px', minWidth: '36px', padding: '0.35rem 0.6rem' }}
+                        onClick={() => {
+                          if (confirm(`¿Estás seguro de eliminar el movimiento "${tx.descripcion}"?`)) {
+                            onDeleteTransaction(tx.id);
+                          }
+                        }}
+                        title="Eliminar transacción"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
     </div>

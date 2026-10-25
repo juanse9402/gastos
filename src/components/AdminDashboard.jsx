@@ -260,17 +260,17 @@ export default function AdminDashboard({ transactions, categories }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       
       {/* 1. PERIOD GRANULARITY SWITCHER */}
-      <div className="glass-card" style={{ padding: '1.25rem' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div className="glass-card" style={{ padding: 'clamp(0.85rem, 3vw, 1.25rem)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
           
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--amber-light)', fontWeight: 800, fontSize: '0.95rem' }}>
-              <CalendarDays size={20} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: 'var(--amber-light)', fontWeight: 800, fontSize: '0.88rem' }}>
+              <CalendarDays size={18} />
               <span>CONSULTA DE ACUMULADOS:</span>
             </div>
 
-            {/* Granularity Pills */}
-            <div className="horizontal-scroller" style={{ background: 'var(--bg-secondary)', padding: '4px', borderRadius: '14px', border: '1px solid var(--border-subtle)', gap: '4px' }}>
+            {/* Granularity Pills with full width on mobile */}
+            <div className="horizontal-scroller full-width-on-mobile" style={{ background: 'var(--bg-secondary)', padding: '4px', borderRadius: '14px', border: '1px solid var(--border-subtle)', gap: '4px' }}>
               <button
                 type="button"
                 className={`btn btn-sm ${granularity === 'dia' ? 'btn-primary' : 'btn-outline'}`}
@@ -331,36 +331,36 @@ export default function AdminDashboard({ transactions, categories }) {
           <div style={{
             background: 'var(--bg-input)',
             borderRadius: 'var(--radius-md)',
-            padding: '0.85rem 1.15rem',
+            padding: '0.75rem 1rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
-            gap: '1rem',
+            gap: '0.75rem',
             border: '1px solid var(--border-subtle)'
           }}>
             {granularity === 'dia' && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Seleccionar Día:</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', width: '100%' }}>
+                <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>Día:</span>
                 <input
                   type="date"
                   className="form-control"
-                  style={{ width: 'auto', padding: '0.4rem 0.8rem', fontSize: '0.9rem' }}
+                  style={{ width: 'auto', minWidth: '150px', padding: '0.35rem 0.65rem', fontSize: '0.88rem' }}
                   value={selectedDay}
                   onChange={e => setSelectedDay(e.target.value)}
                 />
                 <button type="button" className="btn btn-outline btn-sm" onClick={() => setSelectedDay(todayStr)}>Hoy</button>
-                <button type="button" className="btn btn-outline btn-sm" onClick={() => setSelectedDay('2026-09-29')}>29 Sep (Demo)</button>
+                <button type="button" className="btn btn-outline btn-sm" onClick={() => setSelectedDay('2026-09-29')}>29 Sep</button>
               </div>
             )}
 
             {granularity === 'semana' && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Semana (inicia Lunes):</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', width: '100%' }}>
+                <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>Semana (inicia Lunes):</span>
                 <input
                   type="date"
                   className="form-control"
-                  style={{ width: 'auto', padding: '0.4rem 0.8rem', fontSize: '0.9rem' }}
+                  style={{ width: 'auto', minWidth: '150px', padding: '0.35rem 0.65rem', fontSize: '0.88rem' }}
                   value={selectedWeekStart}
                   onChange={e => {
                     const mon = getMonday(parseLocalDate(e.target.value));
@@ -372,8 +372,8 @@ export default function AdminDashboard({ transactions, categories }) {
             )}
 
             {granularity === 'mes' && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Seleccionar Mes:</span>
+              <div className="horizontal-scroller full-width-on-mobile" style={{ alignItems: 'center', gap: '0.4rem' }}>
+                <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>Mes:</span>
                 {availableMonths.map(m => {
                   const [y, mon] = m.split('-');
                   const monthNames = ['', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
@@ -384,7 +384,7 @@ export default function AdminDashboard({ transactions, categories }) {
                       key={m}
                       type="button"
                       className={`btn btn-sm ${isActive ? 'btn-primary' : 'btn-outline'}`}
-                      style={{ padding: '0.35rem 0.75rem' }}
+                      style={{ padding: '0.3rem 0.65rem', fontSize: '0.78rem' }}
                       onClick={() => setSelectedMonth(m)}
                     >
                       {label}
@@ -435,23 +435,23 @@ export default function AdminDashboard({ transactions, categories }) {
 
       {/* 2. DEDICATED CASH VS BANK CONCILIATION & LIQUIDITY CARD */}
       <div className="glass-card" style={{ border: '1px solid var(--border-card)', background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9))' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.85rem', marginBottom: '1.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.85rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.85rem', marginBottom: '1.25rem' }}>
           <div>
-            <h3 style={{ fontSize: '1.25rem', color: '#fff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <ArrowRightLeft size={20} style={{ color: 'var(--amber-light)' }} />
-              Conciliación de Liquidez: Efectivo vs. Bancos ({periodLabel})
+            <h3 style={{ fontSize: 'clamp(1rem, 3.5vw, 1.25rem)', color: '#fff', display: 'flex', alignItems: 'center', gap: '0.45rem', wordBreak: 'break-word', lineHeight: 1.3 }}>
+              <ArrowRightLeft size={18} style={{ color: 'var(--amber-light)', flexShrink: 0 }} />
+              Conciliación: Efectivo vs. Bancos ({periodLabel})
             </h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              Diferencia con exactitud qué dinero entró en efectivo físico vs banco, y de dónde salieron los gastos.
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+              Diferencia qué dinero entró en efectivo físico vs banco, y el origen de cada egreso.
             </p>
           </div>
 
           {/* Quick Channel Filter Toggle */}
-          <div className="horizontal-scroller" style={{ background: 'var(--bg-input)', padding: '3px', borderRadius: '12px', border: '1px solid var(--border-subtle)', gap: '4px' }}>
+          <div className="horizontal-scroller full-width-on-mobile" style={{ background: 'var(--bg-input)', padding: '3px', borderRadius: '12px', border: '1px solid var(--border-subtle)', gap: '4px' }}>
             <button
               type="button"
               className={`btn btn-sm ${selectedMethod === 'all' ? 'btn-primary' : 'btn-outline'}`}
-              style={{ border: 'none', borderRadius: '8px' }}
+              style={{ border: 'none', borderRadius: '8px', padding: '0.35rem 0.65rem' }}
               onClick={() => setSelectedMethod('all')}
             >
               Todos los Canales
@@ -459,48 +459,48 @@ export default function AdminDashboard({ transactions, categories }) {
             <button
               type="button"
               className={`btn btn-sm ${selectedMethod === 'Efectivo' ? 'btn-emerald' : 'btn-outline'}`}
-              style={{ border: 'none', borderRadius: '8px' }}
+              style={{ border: 'none', borderRadius: '8px', padding: '0.35rem 0.65rem' }}
               onClick={() => setSelectedMethod('Efectivo')}
             >
-              <Coins size={14} /> Solo Efectivo
+              <Coins size={13} /> Solo Efectivo
             </button>
             <button
               type="button"
               className={`btn btn-sm ${selectedMethod === 'Banco' ? 'btn-primary' : 'btn-outline'}`}
-              style={{ border: 'none', borderRadius: '8px' }}
+              style={{ border: 'none', borderRadius: '8px', padding: '0.35rem 0.65rem' }}
               onClick={() => setSelectedMethod('Banco')}
             >
-              <Landmark size={14} /> Solo Bancos / Digital
+              <Landmark size={13} /> Solo Bancos
             </button>
           </div>
         </div>
 
         {/* Two-Column Comparison */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.25rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1rem' }}>
           
           {/* COLUMN 1: CAJA FÍSICA (EFECTIVO) */}
           <div style={{
             background: 'rgba(16, 185, 129, 0.05)',
             border: '1px solid rgba(16, 185, 129, 0.25)',
             borderRadius: 'var(--radius-md)',
-            padding: '1.25rem'
+            padding: '1.15rem'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--emerald-light)' }}>
-                  <Banknote size={20} />
+                <div style={{ width: '34px', height: '34px', borderRadius: '9px', background: 'rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--emerald-light)', flexShrink: 0 }}>
+                  <Banknote size={18} />
                 </div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#fff' }}>CAJA FÍSICA (EFECTIVO)</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Dinero en mostrador y caja menor</div>
+                  <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#fff' }}>CAJA FÍSICA (EFECTIVO)</div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>Mostrador y caja menor</div>
                 </div>
               </div>
-              <span className="badge-cuadre sobra" style={{ fontSize: '0.75rem' }}>Físico</span>
+              <span className="badge-cuadre sobra" style={{ fontSize: '0.72rem', padding: '0.2rem 0.5rem' }}>Físico</span>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.9rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', fontSize: '0.88rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--text-muted)' }}>(+) Entradas en Efectivo:</span>
+                <span style={{ color: 'var(--text-muted)' }}>(+) Entradas Efectivo:</span>
                 <strong style={{ color: 'var(--emerald-light)' }}>+{formatCurrency(channelMetrics.ingEfectivo)}</strong>
               </div>
 
@@ -510,18 +510,20 @@ export default function AdminDashboard({ transactions, categories }) {
               </div>
 
               <div style={{
-                marginTop: '0.5rem',
-                paddingTop: '0.75rem',
+                marginTop: '0.45rem',
+                paddingTop: '0.65rem',
                 borderTop: '1px solid rgba(16, 185, 129, 0.2)',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'center'
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '0.35rem'
               }}>
-                <span style={{ fontWeight: 700, textTransform: 'uppercase', fontSize: '0.85rem' }}>
-                  Saldo Neto que debe haber en Efectivo:
+                <span style={{ fontWeight: 700, textTransform: 'uppercase', fontSize: '0.8rem' }}>
+                  Saldo Neto Efectivo:
                 </span>
                 <span style={{
-                  fontSize: '1.35rem',
+                  fontSize: '1.25rem',
                   fontWeight: 800,
                   color: channelMetrics.saldoEfectivo >= 0 ? 'var(--emerald-light)' : 'var(--rose-light)',
                   fontFamily: 'Outfit, sans-serif'
@@ -537,45 +539,47 @@ export default function AdminDashboard({ transactions, categories }) {
             background: 'rgba(59, 130, 246, 0.05)',
             border: '1px solid rgba(59, 130, 246, 0.25)',
             borderRadius: 'var(--radius-md)',
-            padding: '1.25rem'
+            padding: '1.15rem'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(59, 130, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--blue-primary)' }}>
-                  <Landmark size={20} />
+                <div style={{ width: '34px', height: '34px', borderRadius: '9px', background: 'rgba(59, 130, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--blue-primary)', flexShrink: 0 }}>
+                  <Landmark size={18} />
                 </div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#fff' }}>BANCOS / DIGITAL / DIDI</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Transferencias, tarjetas y plataformas</div>
+                  <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#fff' }}>BANCOS / DIGITAL / DIDI</div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>Transferencias, tarjetas y apps</div>
                 </div>
               </div>
-              <span className="badge-cuadre exacto" style={{ fontSize: '0.75rem' }}>Bancos</span>
+              <span className="badge-cuadre exacto" style={{ fontSize: '0.72rem', padding: '0.2rem 0.5rem' }}>Bancos</span>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.9rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', fontSize: '0.88rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--text-muted)' }}>(+) Entradas Banco & Didi:</span>
                 <strong style={{ color: 'var(--blue-primary)' }}>+{formatCurrency(channelMetrics.ingBanco)}</strong>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--text-muted)' }}>(-) Gastos Transferidos (Proveedores/Arriendos):</span>
+                <span style={{ color: 'var(--text-muted)' }}>(-) Gastos Transferidos:</span>
                 <strong style={{ color: 'var(--rose-light)' }}>-{formatCurrency(channelMetrics.gstBanco)}</strong>
               </div>
 
               <div style={{
-                marginTop: '0.5rem',
-                paddingTop: '0.75rem',
+                marginTop: '0.45rem',
+                paddingTop: '0.65rem',
                 borderTop: '1px solid rgba(59, 130, 246, 0.2)',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'center'
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '0.35rem'
               }}>
-                <span style={{ fontWeight: 700, textTransform: 'uppercase', fontSize: '0.85rem' }}>
-                  Saldo Neto que debe haber en Bancos:
+                <span style={{ fontWeight: 700, textTransform: 'uppercase', fontSize: '0.8rem' }}>
+                  Saldo Neto Bancos:
                 </span>
                 <span style={{
-                  fontSize: '1.35rem',
+                  fontSize: '1.25rem',
                   fontWeight: 800,
                   color: channelMetrics.saldoBanco >= 0 ? 'var(--blue-primary)' : 'var(--rose-light)',
                   fontFamily: 'Outfit, sans-serif'
@@ -618,7 +622,7 @@ export default function AdminDashboard({ transactions, categories }) {
             {formatCurrency(metrics.gastos)}
           </div>
           <div className="kpi-subtitle">
-            {metrics.catArray.length} rubros con egresos en {selectedMethod === 'all' ? 'todos los canales' : selectedMethod}
+            {metrics.catArray.length} rubros con egresos
           </div>
         </div>
 
@@ -642,17 +646,20 @@ export default function AdminDashboard({ transactions, categories }) {
       {/* 4. EVOLUTION BAR CHART (By Month, Week, or Day) */}
       {evolutionData && (
         <div className="glass-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
             <div>
-              <h3 style={{ fontSize: '1.15rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--amber-light)' }}>
+              <h3 style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--amber-light)' }}>
                 <BarChart3 size={18} />
-                Evolución de {granularity === 'año' ? `Meses del Año ${selectedYear}` : granularity === 'semana' ? 'Días de la Semana' : 'Semanas del Mes'}
+                Evolución de {granularity === 'año' ? `Meses (${selectedYear})` : granularity === 'semana' ? 'Días' : 'Semanas'}
               </h3>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                Comparación de Ingresos (Verde) vs Gastos (Rojo) {selectedMethod !== 'all' ? `[Filtrado por: ${selectedMethod}]` : ''}
+              <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                Ingresos (Verde) vs Gastos (Rojo)
               </p>
+              <div className="show-on-mobile" style={{ fontSize: '0.72rem', color: 'var(--amber-light)', marginTop: '0.2rem' }}>
+                ↔ Desliza para ver todos los periodos
+              </div>
             </div>
-            <div style={{ display: 'flex', gap: '1rem', fontSize: '0.8rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.78rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                 <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'var(--emerald-primary)' }} />
                 <span>Ingresos</span>
@@ -664,8 +671,8 @@ export default function AdminDashboard({ transactions, categories }) {
             </div>
           </div>
 
-          <div style={{ width: '100%', overflowX: 'auto', paddingBottom: '0.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '1rem', minWidth: '550px', height: '220px', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.5rem' }}>
+          <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch', paddingBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '0.85rem', minWidth: '480px', height: '200px', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.5rem' }}>
               {(() => {
                 const maxVal = Math.max(
                   ...evolutionData.map(d => Math.max(d.ing, d.gst)),
@@ -673,39 +680,39 @@ export default function AdminDashboard({ transactions, categories }) {
                 );
 
                 return evolutionData.map(d => {
-                  const ingHeight = Math.max(4, (d.ing / maxVal) * 170);
-                  const gstHeight = Math.max(4, (d.gst / maxVal) * 170);
+                  const ingHeight = Math.max(4, (d.ing / maxVal) * 150);
+                  const gstHeight = Math.max(4, (d.gst / maxVal) * 150);
 
                   return (
-                    <div key={d.label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem', height: '100%', justifyContent: 'flex-end' }}>
-                      <div style={{ display: 'flex', alignItems: 'flex-end', gap: '4px', width: '100%', justifyContent: 'center' }}>
+                    <div key={d.label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem', height: '100%', justifyContent: 'flex-end' }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-end', gap: '3px', width: '100%', justifyContent: 'center' }}>
                         <div
                           title={`Ingresos ${d.label}: ${formatCurrency(d.ing)}`}
                           style={{
-                            width: '40%',
-                            maxWidth: '28px',
+                            width: '42%',
+                            maxWidth: '24px',
                             height: `${ingHeight}px`,
                             background: d.ing > 0 ? 'linear-gradient(180deg, #34d399, #059669)' : 'var(--bg-input)',
-                            borderRadius: '4px 4px 0 0',
+                            borderRadius: '3px 3px 0 0',
                             transition: 'height 0.4s ease'
                           }}
                         />
                         <div
                           title={`Gastos ${d.label}: ${formatCurrency(d.gst)}`}
                           style={{
-                            width: '40%',
-                            maxWidth: '28px',
+                            width: '42%',
+                            maxWidth: '24px',
                             height: `${gstHeight}px`,
                             background: d.gst > 0 ? 'linear-gradient(180deg, #fb7185, #e11d48)' : 'var(--bg-input)',
-                            borderRadius: '4px 4px 0 0',
+                            borderRadius: '3px 3px 0 0',
                             transition: 'height 0.4s ease'
                           }}
                         />
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
                         {d.label}
                       </div>
-                      <div style={{ fontSize: '0.7rem', fontWeight: 700, color: d.net >= 0 ? 'var(--emerald-light)' : 'var(--rose-light)' }}>
+                      <div style={{ fontSize: '0.68rem', fontWeight: 700, color: d.net >= 0 ? 'var(--emerald-light)' : 'var(--rose-light)' }}>
                         {d.net !== 0 ? formatCurrency(d.net) : ''}
                       </div>
                     </div>
@@ -718,40 +725,40 @@ export default function AdminDashboard({ transactions, categories }) {
       )}
 
       {/* 5. VISUAL DONUT & CATEGORY BREAKDOWN */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1.25rem' }}>
         
         {/* Donut: Ingresos vs Gastos */}
         <div className="glass-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-            <h3 style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <PieIcon size={18} style={{ color: 'var(--amber-light)' }} />
-              Distribución Ingresos vs Gastos
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <h3 style={{ fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <PieIcon size={17} style={{ color: 'var(--amber-light)' }} />
+              Ingresos vs Gastos
             </h3>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>{periodLabel}</span>
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>{periodLabel}</span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem 0' }}>
-            <div style={{ position: 'relative', width: '220px', height: '220px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.75rem 0' }}>
+            <div style={{ position: 'relative', width: '200px', height: '200px' }}>
               {(() => {
                 const total = metrics.ingresos + metrics.gastos;
-                if (total === 0) return <div style={{ textAlign: 'center', paddingTop: '80px', color: 'var(--text-dim)' }}>Sin movimientos en este filtro</div>;
+                if (total === 0) return <div style={{ textAlign: 'center', paddingTop: '75px', color: 'var(--text-dim)', fontSize: '0.85rem' }}>Sin movimientos en este filtro</div>;
                 const ingresoPct = (metrics.ingresos / total) * 100;
                 const gastoPct = (metrics.gastos / total) * 100;
-                const radius = 70;
+                const radius = 68;
                 const circumference = 2 * Math.PI * radius;
                 const ingresoDash = (ingresoPct / 100) * circumference;
                 const gastoDash = (gastoPct / 100) * circumference;
 
                 return (
-                  <svg width="220" height="220" viewBox="0 0 200 200" style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx="100" cy="100" r={radius} fill="none" stroke="var(--bg-input)" strokeWidth="28" />
+                  <svg width="200" height="200" viewBox="0 0 200 200" style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx="100" cy="100" r={radius} fill="none" stroke="var(--bg-input)" strokeWidth="26" />
                     <circle
-                      cx="100" cy="100" r={radius} fill="none" stroke="var(--emerald-primary)" strokeWidth="28"
+                      cx="100" cy="100" r={radius} fill="none" stroke="var(--emerald-primary)" strokeWidth="26"
                       strokeDasharray={`${ingresoDash} ${circumference}`} strokeDashoffset="0"
                       style={{ transition: 'stroke-dasharray 0.6s ease' }}
                     />
                     <circle
-                      cx="100" cy="100" r={radius} fill="none" stroke="var(--rose-primary)" strokeWidth="28"
+                      cx="100" cy="100" r={radius} fill="none" stroke="var(--rose-primary)" strokeWidth="26"
                       strokeDasharray={`${gastoDash} ${circumference}`} strokeDashoffset={`-${ingresoDash}`}
                       style={{ transition: 'stroke-dasharray 0.6s ease' }}
                     />
@@ -765,30 +772,30 @@ export default function AdminDashboard({ transactions, categories }) {
                 transform: 'translate(-50%, -50%)',
                 textAlign: 'center'
               }}>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Flujo Total</div>
-                <div style={{ fontSize: '1.15rem', fontWeight: 800 }}>{formatCurrency(metrics.ingresos + metrics.gastos)}</div>
+                <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Flujo Total</div>
+                <div style={{ fontSize: '1.05rem', fontWeight: 800 }}>{formatCurrency(metrics.ingresos + metrics.gastos)}</div>
               </div>
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginTop: '1rem', borderTop: '1px solid var(--border-subtle)', paddingTop: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <div style={{ width: '12px', height: '12px', borderRadius: '3px', background: 'var(--emerald-primary)' }} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', marginTop: '0.85rem', borderTop: '1px solid var(--border-subtle)', paddingTop: '0.85rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <div style={{ width: '10px', height: '10px', borderRadius: '3px', background: 'var(--emerald-primary)', flexShrink: 0 }} />
               <div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                   Ingresos ({metrics.ingresos + metrics.gastos > 0 ? ((metrics.ingresos / (metrics.ingresos + metrics.gastos)) * 100).toFixed(1) : 0}%)
                 </div>
-                <div style={{ fontWeight: 'bold', color: 'var(--emerald-light)' }}>{formatCurrency(metrics.ingresos)}</div>
+                <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--emerald-light)' }}>{formatCurrency(metrics.ingresos)}</div>
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <div style={{ width: '12px', height: '12px', borderRadius: '3px', background: 'var(--rose-primary)' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <div style={{ width: '10px', height: '10px', borderRadius: '3px', background: 'var(--rose-primary)', flexShrink: 0 }} />
               <div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                   Gastos ({metrics.ingresos + metrics.gastos > 0 ? ((metrics.gastos / (metrics.ingresos + metrics.gastos)) * 100).toFixed(1) : 0}%)
                 </div>
-                <div style={{ fontWeight: 'bold', color: 'var(--rose-light)' }}>{formatCurrency(metrics.gastos)}</div>
+                <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--rose-light)' }}>{formatCurrency(metrics.gastos)}</div>
               </div>
             </div>
           </div>
@@ -796,29 +803,29 @@ export default function AdminDashboard({ transactions, categories }) {
 
         {/* Category breakdown bars */}
         <div className="glass-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-            <h3 style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <BarChart3 size={18} style={{ color: 'var(--amber-light)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <h3 style={{ fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <BarChart3 size={17} style={{ color: 'var(--amber-light)' }} />
               Gastos por Rubro ({periodLabel})
             </h3>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Participación</span>
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>Participación</span>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {metrics.catArray.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-dim)' }}>
+              <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-dim)', fontSize: '0.85rem' }}>
                 No hay gastos registrados con este filtro.
               </div>
             ) : (
               metrics.catArray.slice(0, 6).map((cat, idx) => (
                 <div key={cat.name}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '0.25rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '0.2rem' }}>
                     <span style={{ fontWeight: 600 }}>{cat.name}</span>
                     <span style={{ color: 'var(--text-muted)' }}>
                       {formatCurrency(cat.total)} ({cat.percentage}%)
                     </span>
                   </div>
-                  <div style={{ width: '100%', height: '8px', background: 'var(--bg-input)', borderRadius: '4px', overflow: 'hidden' }}>
+                  <div style={{ width: '100%', height: '7px', background: 'var(--bg-input)', borderRadius: '4px', overflow: 'hidden' }}>
                     <div
                       style={{
                         height: '100%',
@@ -836,13 +843,65 @@ export default function AdminDashboard({ transactions, categories }) {
         </div>
       </div>
 
-      {/* 6. DETAILED TABLE OF THE SELECTED PERIOD WITH PAYMENT METHOD */}
+      {/* 6. DETAILED SUMMARY OF THE SELECTED PERIOD */}
       <div className="glass-card">
-        <h3 style={{ fontSize: '1.15rem', marginBottom: '1rem' }}>
-          Detalle de Rubros y Métodos de Pago ({periodLabel})
+        <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>
+          Detalle de Rubros ({periodLabel})
         </h3>
 
-        <div className="table-responsive">
+        {/* Mobile Cards for Rubros (Screens <= 768px) */}
+        <div className="show-on-mobile" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+          {metrics.ventasLocal > 0 && (
+            <div className="mobile-data-card" style={{ borderLeft: '3px solid var(--emerald-primary)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                  <div style={{ fontWeight: 700, color: 'var(--emerald-light)', fontSize: '0.9rem' }}>Ventas Mostrador (Local)</div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{metrics.ingresos > 0 ? ((metrics.ventasLocal / metrics.ingresos) * 100).toFixed(1) : 0}% de ingresos</div>
+                </div>
+                <span style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--emerald-light)' }}>
+                  {formatCurrency(metrics.ventasLocal)}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {metrics.ventasDidi > 0 && (
+            <div className="mobile-data-card" style={{ borderLeft: '3px solid var(--emerald-primary)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                  <div style={{ fontWeight: 700, color: 'var(--emerald-light)', fontSize: '0.9rem' }}>Ventas Didi Food</div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{metrics.ingresos > 0 ? ((metrics.ventasDidi / metrics.ingresos) * 100).toFixed(1) : 0}% de ingresos</div>
+                </div>
+                <span style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--emerald-light)' }}>
+                  {formatCurrency(metrics.ventasDidi)}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {metrics.catArray.map(cat => (
+            <div key={cat.name} className="mobile-data-card" style={{ borderLeft: '3px solid var(--rose-primary)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                  <div style={{ fontWeight: 700, color: '#fff', fontSize: '0.9rem' }}>{cat.name}</div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{cat.percentage}% de gastos totales</div>
+                </div>
+                <span style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--rose-light)' }}>
+                  {formatCurrency(cat.total)}
+                </span>
+              </div>
+            </div>
+          ))}
+
+          {displayTxs.length === 0 && (
+            <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-dim)', fontSize: '0.85rem' }}>
+              No hay movimientos en este periodo.
+            </div>
+          )}
+        </div>
+
+        {/* Desktop Table (Screens > 768px) */}
+        <div className="table-responsive hide-on-mobile">
           <table className="custom-table">
             <thead>
               <tr>

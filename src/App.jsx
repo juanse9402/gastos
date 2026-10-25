@@ -680,20 +680,21 @@ export default function App() {
         <div style={{
           background: 'linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, rgba(234, 88, 12, 0.1) 100%)',
           borderBottom: '1px solid rgba(245, 158, 11, 0.25)',
-          padding: '0.6rem 1.5rem',
+          padding: '0.6rem clamp(0.75rem, 3vw, 1.5rem)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '1rem',
-          fontSize: '0.85rem'
+          flexWrap: 'wrap',
+          gap: '0.65rem',
+          fontSize: '0.82rem'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#fbbf24' }}>
-            <Database size={16} />
-            <span>
-              <strong>Base de Datos Supabase Conectada:</strong> Falta ejecutar el script SQL inicial para habilitar la sincronización en tiempo real en la nube entre múltiples dispositivos.
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fbbf24', minWidth: 0, flex: 1 }}>
+            <Database size={16} style={{ flexShrink: 0 }} />
+            <span style={{ lineHeight: 1.35 }}>
+              <strong>Base de Datos Supabase:</strong> Falta ejecutar el script SQL inicial para sincronización en tiempo real.
             </span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
             <button
               type="button"
               className="btn btn-primary btn-sm"
@@ -701,7 +702,7 @@ export default function App() {
               style={{ padding: '0.25rem 0.65rem', fontSize: '0.78rem' }}
             >
               <Sparkles size={13} />
-              <span>Ver Script SQL Listo</span>
+              <span>Ver Script SQL</span>
             </button>
             <button
               type="button"
@@ -728,20 +729,20 @@ export default function App() {
 
         {/* PERFIL ADMINISTRADOR */}
         {currentRole === 'admin' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             
             {/* Admin Header & Tabs */}
-            <div className="glass-card" style={{ padding: '1rem 1.25rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.85rem', marginBottom: '0.75rem' }}>
+            <div className="glass-card" style={{ padding: '1rem clamp(0.75rem, 3vw, 1.25rem)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.75rem', marginBottom: '0.75rem' }}>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--amber-light)', fontWeight: 700, fontSize: '0.85rem' }}>
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--amber-light)' }} />
-                    PANEL DE CONTROL GERENCIAL • {activeCompany?.name}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: 'var(--amber-light)', fontWeight: 700, fontSize: '0.8rem' }}>
+                    <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: 'var(--amber-light)', flexShrink: 0 }} />
+                    PANEL GERENCIAL • {activeCompany?.name}
                   </div>
-                  <h1 style={{ fontSize: '1.6rem', marginTop: '0.15rem' }}>Administración Financiera</h1>
+                  <h1 style={{ fontSize: 'clamp(1.25rem, 4.5vw, 1.6rem)', marginTop: '0.15rem', lineHeight: 1.2 }}>Administración Financiera</h1>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                   <button
                     type="button"
                     className="btn btn-outline btn-sm"
@@ -752,14 +753,14 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Tabs */}
+              {/* Tabs with horizontal touch scroll */}
               <div className="tabs-nav" style={{ marginBottom: 0, paddingBottom: 0, borderBottom: 'none' }}>
                 <button
                   type="button"
                   className={`tab-btn ${adminTab === 'dashboard' ? 'active' : ''}`}
                   onClick={() => setAdminTab('dashboard')}
                 >
-                  <BarChart3 size={17} />
+                  <BarChart3 size={16} />
                   <span>Dashboard Ejecutivo</span>
                 </button>
 
@@ -769,7 +770,7 @@ export default function App() {
                   onClick={() => setAdminTab('closes')}
                   style={{ position: 'relative' }}
                 >
-                  <Inbox size={17} />
+                  <Inbox size={16} />
                   <span>Arqueos de Cajeros</span>
                   {pendingClosesCount > 0 && (
                     <span
@@ -778,9 +779,9 @@ export default function App() {
                         color: '#fff',
                         borderRadius: '10px',
                         padding: '0.1rem 0.45rem',
-                        fontSize: '0.7rem',
+                        fontSize: '0.68rem',
                         fontWeight: 'bold',
-                        marginLeft: '0.3rem'
+                        marginLeft: '0.25rem'
                       }}
                     >
                       {pendingClosesCount}
@@ -793,8 +794,8 @@ export default function App() {
                   className={`tab-btn ${adminTab === 'transactions' ? 'active' : ''}`}
                   onClick={() => setAdminTab('transactions')}
                 >
-                  <BookOpen size={17} />
-                  <span>Libro de Movimientos</span>
+                  <BookOpen size={16} />
+                  <span>Libro Movimientos</span>
                 </button>
 
                 <button
@@ -803,7 +804,7 @@ export default function App() {
                   onClick={() => setAdminTab('suppliers')}
                   style={{ position: 'relative' }}
                 >
-                  <Truck size={17} />
+                  <Truck size={16} />
                   <span>Proveedores & Pagos</span>
                   {pendingInvoicesCount > 0 && (
                     <span
@@ -812,9 +813,9 @@ export default function App() {
                         color: '#fff',
                         borderRadius: '10px',
                         padding: '0.1rem 0.45rem',
-                        fontSize: '0.7rem',
+                        fontSize: '0.68rem',
                         fontWeight: 'bold',
-                        marginLeft: '0.3rem'
+                        marginLeft: '0.25rem'
                       }}
                     >
                       {pendingInvoicesCount}
@@ -827,7 +828,7 @@ export default function App() {
                   className={`tab-btn ${adminTab === 'categories' ? 'active' : ''}`}
                   onClick={() => setAdminTab('categories')}
                 >
-                  <Tag size={17} />
+                  <Tag size={16} />
                   <span>Categorías</span>
                 </button>
 
@@ -836,7 +837,7 @@ export default function App() {
                   className={`tab-btn ${adminTab === 'users' ? 'active' : ''}`}
                   onClick={() => setAdminTab('users')}
                 >
-                  <Users size={17} />
+                  <Users size={16} />
                   <span>Personal & Accesos</span>
                 </button>
               </div>

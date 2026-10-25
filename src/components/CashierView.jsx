@@ -372,40 +372,40 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
 
         {/* Live Cuadre Card - Direct Representation of Image 2 */}
         <div className="glass-card" style={{ marginBottom: '1.5rem', border: '1px solid var(--border-card)', background: 'linear-gradient(180deg, #131b2e 0%, #0e1524 100%)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.75rem', marginBottom: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.75rem', marginBottom: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Receipt size={20} style={{ color: 'var(--amber-light)' }} />
-              <h3 style={{ fontSize: '1.15rem' }}>Resumen del Cuadre en Vivo</h3>
+              <Receipt size={20} style={{ color: 'var(--amber-light)', flexShrink: 0 }} />
+              <h3 style={{ fontSize: 'clamp(1.05rem, 3.5vw, 1.2rem)' }}>Resumen del Cuadre en Vivo</h3>
             </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>
-              Cálculo idéntico a la tabla de cuadre diario
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
+              Cálculo de arqueo en tiempo real
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))', gap: '0.85rem', marginBottom: '1.25rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 130px), 1fr))', gap: '0.75rem', marginBottom: '1.25rem' }}>
             <div style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>CAJA Esperada</div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{formatCurrency(numCajaEsperada)}</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>CAJA Esperada</div>
+              <div style={{ fontSize: '1.15rem', fontWeight: 'bold' }}>{formatCurrency(numCajaEsperada)}</div>
             </div>
 
             <div style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Efectivo</div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--emerald-light)' }}>{formatCurrency(numEfectivo)}</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Efectivo</div>
+              <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: 'var(--emerald-light)' }}>{formatCurrency(numEfectivo)}</div>
             </div>
 
             <div style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Banco</div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--blue-primary)' }}>{formatCurrency(numBanco)}</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Banco</div>
+              <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: 'var(--blue-primary)' }}>{formatCurrency(numBanco)}</div>
             </div>
 
             <div style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Gastos Turno</div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{numGastos > 0 ? formatCurrency(numGastos) : '$ -'}</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Gastos Turno</div>
+              <div style={{ fontSize: '1.15rem', fontWeight: 'bold' }}>{numGastos > 0 ? formatCurrency(numGastos) : '$ -'}</div>
             </div>
 
             <div style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Nómina Turno</div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--purple-primary)' }}>{formatCurrency(numNomina)}</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Nómina Turno</div>
+              <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: 'var(--purple-primary)' }}>{formatCurrency(numNomina)}</div>
             </div>
           </div>
 
@@ -413,7 +413,7 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
           <div style={{
             background: 'var(--bg-secondary)',
             borderRadius: 'var(--radius-md)',
-            padding: '1.25rem',
+            padding: '1.15rem',
             border: '1px solid var(--border-subtle)',
             display: 'flex',
             alignItems: 'center',
@@ -422,20 +422,20 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
             gap: '1rem'
           }}>
             <div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 TOTAL JUSTIFICADO (Efectivo + Banco + Gastos + Nómina)
               </div>
-              <div style={{ fontSize: '1.85rem', fontWeight: 800, fontFamily: 'Outfit, sans-serif' }}>
+              <div style={{ fontSize: 'clamp(1.5rem, 5vw, 1.85rem)', fontWeight: 800, fontFamily: 'Outfit, sans-serif' }}>
                 {formatCurrency(totalCalculado)}
               </div>
             </div>
 
             {/* Descuadre Badge */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Descuadre</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flexWrap: 'wrap' }}>
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Descuadre</div>
                 <div style={{
-                  fontSize: '1.5rem',
+                  fontSize: '1.4rem',
                   fontWeight: 800,
                   color: descuadre === 0 ? 'var(--blue-primary)' : descuadre > 0 ? 'var(--emerald-light)' : 'var(--rose-light)'
                 }}>
@@ -476,11 +476,11 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
             />
           </div>
 
-          <div style={{ marginTop: '1.5rem', textAlign: 'right' }}>
+          <div style={{ marginTop: '1.25rem', textAlign: 'center' }}>
             <button
               type="submit"
-              className="btn btn-emerald"
-              style={{ padding: '0.85rem 2rem', fontSize: '1.05rem', width: '100%', maxWidth: '350px' }}
+              className="btn btn-emerald full-width-on-mobile"
+              style={{ padding: '0.85rem 2rem', fontSize: '1rem', width: '100%', maxWidth: '380px' }}
             >
               <Send size={18} />
               Cerrar Turno & Enviar Arqueo
@@ -496,7 +496,53 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
           Historial de Cierres Recientes
         </h3>
 
-        <div className="table-responsive">
+        {/* Mobile Cards View for Recent Closes (Screens <= 768px) */}
+        <div className="show-on-mobile" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {dailyCloses.slice(0, 5).map(c => (
+            <div key={c.id} className="mobile-data-card" style={{ borderLeft: `3px solid ${c.descuadre === 0 ? 'var(--blue-primary)' : c.descuadre > 0 ? 'var(--emerald-primary)' : 'var(--rose-primary)'}` }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <span style={{ fontWeight: 700, fontSize: '0.9rem' }}>{formatDate(c.fecha)}</span>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginLeft: '0.35rem' }}>({c.hora})</span>
+                </div>
+                <span style={{
+                  padding: '0.15rem 0.5rem',
+                  borderRadius: '10px',
+                  fontSize: '0.72rem',
+                  fontWeight: 600,
+                  background: c.estadoRevision === 'Aprobado' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                  color: c.estadoRevision === 'Aprobado' ? 'var(--emerald-light)' : 'var(--amber-light)'
+                }}>
+                  {c.estadoRevision || 'Pendiente'}
+                </span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.82rem', background: 'rgba(0,0,0,0.15)', padding: '0.5rem', borderRadius: '8px' }}>
+                <div>
+                  <span style={{ color: 'var(--text-dim)', fontSize: '0.72rem' }}>Cajero / Turno:</span>
+                  <div style={{ fontWeight: 600 }}>{c.cajero} • {c.turno}</div>
+                </div>
+                <div>
+                  <span style={{ color: 'var(--text-dim)', fontSize: '0.72rem' }}>Esperado:</span>
+                  <div style={{ fontWeight: 600 }}>{formatCurrency(c.cajaEsperada)}</div>
+                </div>
+                <div>
+                  <span style={{ color: 'var(--text-dim)', fontSize: '0.72rem' }}>Justificado:</span>
+                  <div style={{ fontWeight: 700, color: 'var(--text-main)' }}>{formatCurrency(c.totalCalculado)}</div>
+                </div>
+                <div>
+                  <span style={{ color: 'var(--text-dim)', fontSize: '0.72rem' }}>Resultado:</span>
+                  <span className={`badge-cuadre ${c.descuadre > 0 ? 'sobra' : c.descuadre < 0 ? 'falta' : 'exacto'}`} style={{ fontSize: '0.7rem', padding: '0.15rem 0.45rem' }}>
+                    {c.estadoCuadre} ({formatCurrency(Math.abs(c.descuadre))})
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Table View (Screens > 768px) */}
+        <div className="table-responsive hide-on-mobile">
           <table className="custom-table">
             <thead>
               <tr>

@@ -62,64 +62,49 @@ export default function DailyClosesReview({ dailyCloses, onApproveClose, onRejec
                     transition: 'var(--transition)'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                      <div style={{
-                        width: '44px',
-                        height: '44px',
-                        borderRadius: '12px',
-                        background: c.descuadre === 0 ? 'rgba(59, 130, 246, 0.15)' : c.descuadre > 0 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(244, 63, 94, 0.15)',
-                        color: c.descuadre === 0 ? 'var(--blue-primary)' : c.descuadre > 0 ? 'var(--emerald-light)' : 'var(--rose-light)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: 'bold',
-                        fontSize: '1.2rem'
-                      }}>
-                        {c.descuadre === 0 ? '✓' : c.descuadre > 0 ? '▲' : '▼'}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    {/* Top Row: Cashier Info & Date */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                        <div style={{
+                          width: '42px',
+                          height: '42px',
+                          borderRadius: '12px',
+                          background: c.descuadre === 0 ? 'rgba(59, 130, 246, 0.15)' : c.descuadre > 0 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(244, 63, 94, 0.15)',
+                          color: c.descuadre === 0 ? 'var(--blue-primary)' : c.descuadre > 0 ? 'var(--emerald-light)' : 'var(--rose-light)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 'bold',
+                          fontSize: '1.15rem',
+                          flexShrink: 0
+                        }}>
+                          {c.descuadre === 0 ? '✓' : c.descuadre > 0 ? '▲' : '▼'}
+                        </div>
+
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                            <span style={{ fontWeight: 700, fontSize: '1rem' }}>{formatDate(c.fecha)}</span>
+                            <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>({c.hora})</span>
+                            <span style={{
+                              padding: '0.15rem 0.5rem',
+                              borderRadius: '8px',
+                              background: 'var(--bg-input)',
+                              fontSize: '0.72rem',
+                              color: 'var(--text-muted)',
+                              fontWeight: 600
+                            }}>
+                              {c.turno}
+                            </span>
+                          </div>
+                          <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>
+                            Cajero: <strong style={{ color: 'var(--text-main)' }}>{c.cajero}</strong>
+                          </div>
+                        </div>
                       </div>
 
+                      {/* Approval Status Badge on Top Right */}
                       <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                          <span style={{ fontWeight: 700, fontSize: '1.05rem' }}>{formatDate(c.fecha)}</span>
-                          <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>({c.hora})</span>
-                          <span style={{
-                            padding: '0.15rem 0.5rem',
-                            borderRadius: '8px',
-                            background: 'var(--bg-input)',
-                            fontSize: '0.75rem',
-                            color: 'var(--text-muted)'
-                          }}>
-                            {c.turno}
-                          </span>
-                        </div>
-                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
-                          Cajero: <strong style={{ color: 'var(--text-main)' }}>{c.cajero}</strong>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Summary values */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>CAJA Esperada</div>
-                        <div style={{ fontWeight: 600 }}>{formatCurrency(c.cajaEsperada)}</div>
-                      </div>
-
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Total Justificado</div>
-                        <div style={{ fontWeight: 700, color: 'var(--text-main)' }}>{formatCurrency(c.totalCalculado)}</div>
-                      </div>
-
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Descuadre</div>
-                        <span className={`badge-cuadre ${c.descuadre > 0 ? 'sobra' : c.descuadre < 0 ? 'falta' : 'exacto'}`}>
-                          {c.estadoCuadre} {c.descuadre !== 0 && `(${formatCurrency(Math.abs(c.descuadre))})`}
-                        </span>
-                      </div>
-
-                      {/* Approval badge / buttons */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         {isApproved ? (
                           <span style={{
                             display: 'inline-flex',
@@ -127,51 +112,102 @@ export default function DailyClosesReview({ dailyCloses, onApproveClose, onRejec
                             gap: '0.35rem',
                             color: 'var(--emerald-light)',
                             background: 'rgba(16, 185, 129, 0.15)',
-                            padding: '0.4rem 0.85rem',
+                            padding: '0.35rem 0.75rem',
                             borderRadius: '20px',
                             fontWeight: 700,
-                            fontSize: '0.8rem'
+                            fontSize: '0.78rem'
                           }}>
-                            <CheckCircle2 size={15} />
+                            <CheckCircle2 size={14} />
                             Aprobado & Consolidado
                           </span>
                         ) : (
-                          <button
-                            type="button"
-                            className="btn btn-emerald btn-sm"
-                            onClick={() => onApproveClose(c.id)}
-                            title="Aprobar e integrar automáticamente en las finanzas del restaurante"
-                          >
-                            <ShieldCheck size={15} />
-                            Aprobar Cierre
-                          </button>
+                          <span style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                            color: 'var(--amber-light)',
+                            background: 'rgba(245, 158, 11, 0.15)',
+                            padding: '0.35rem 0.75rem',
+                            borderRadius: '20px',
+                            fontWeight: 700,
+                            fontSize: '0.78rem'
+                          }}>
+                            <Clock size={14} />
+                            Pendiente
+                          </span>
                         )}
+                      </div>
+                    </div>
 
+                    {/* Middle Row: Metrics Grid */}
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 105px), 1fr))',
+                      gap: '0.75rem',
+                      background: 'rgba(0, 0, 0, 0.2)',
+                      padding: '0.75rem 1rem',
+                      borderRadius: '10px'
+                    }}>
+                      <div>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Caja Esperada</div>
+                        <div style={{ fontWeight: 600, fontSize: '0.92rem', marginTop: '0.15rem' }}>{formatCurrency(c.cajaEsperada)}</div>
+                      </div>
+
+                      <div>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Total Justificado</div>
+                        <div style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '0.92rem', marginTop: '0.15rem' }}>{formatCurrency(c.totalCalculado)}</div>
+                      </div>
+
+                      <div>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Descuadre</div>
+                        <div style={{ marginTop: '0.15rem' }}>
+                          <span className={`badge-cuadre ${c.descuadre > 0 ? 'sobra' : c.descuadre < 0 ? 'falta' : 'exacto'}`} style={{ fontSize: '0.75rem', padding: '0.2rem 0.5rem' }}>
+                            {c.estadoCuadre} {c.descuadre !== 0 && `(${formatCurrency(Math.abs(c.descuadre))})`}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom Row: Actions */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', flexWrap: 'wrap', gap: '0.5rem' }}>
+                      {!isApproved && (
+                        <button
+                          type="button"
+                          className="btn btn-emerald btn-sm"
+                          onClick={() => onApproveClose(c.id)}
+                          title="Aprobar e integrar automáticamente en las finanzas del restaurante"
+                          style={{ flex: '1 1 auto', minHeight: '38px', justifyContent: 'center' }}
+                        >
+                          <ShieldCheck size={15} />
+                          <span>Aprobar Cierre</span>
+                        </button>
+                      )}
+
+                      <button
+                        type="button"
+                        className="btn btn-outline btn-sm"
+                        onClick={() => toggleExpand(c.id)}
+                        style={{ minHeight: '38px', padding: '0.4rem 0.85rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+                      >
+                        <span style={{ fontSize: '0.8rem' }}>{isExpanded ? 'Ocultar Desglose' : 'Ver Desglose'}</span>
+                        {isExpanded ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+                      </button>
+
+                      {onDeleteClose && (
                         <button
                           type="button"
                           className="btn btn-outline btn-sm"
-                          onClick={() => toggleExpand(c.id)}
-                          style={{ padding: '0.4rem 0.6rem' }}
+                          onClick={() => {
+                            if (window.confirm(`¿Estás seguro de eliminar el arqueo del cajero ${c.cajero} (${formatDate(c.fecha)})? Útil si fue de prueba o un error.`)) {
+                              onDeleteClose(c.id);
+                            }
+                          }}
+                          title="Eliminar este arqueo (prueba o error)"
+                          style={{ minHeight: '38px', padding: '0.4rem 0.75rem', color: 'var(--rose-light)', borderColor: 'rgba(244, 63, 94, 0.3)' }}
                         >
-                          {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                          <Trash2 size={15} />
                         </button>
-
-                        {onDeleteClose && (
-                          <button
-                            type="button"
-                            className="btn btn-outline btn-sm"
-                            onClick={() => {
-                              if (window.confirm(`¿Estás seguro de eliminar el arqueo del cajero ${c.cajero} (${formatDate(c.fecha)})? Útil si fue de prueba o un error.`)) {
-                                onDeleteClose(c.id);
-                              }
-                            }}
-                            title="Eliminar este arqueo (prueba o error)"
-                            style={{ padding: '0.4rem 0.6rem', color: 'var(--rose-light)', borderColor: 'rgba(244, 63, 94, 0.3)' }}
-                          >
-                            <Trash2 size={15} />
-                          </button>
-                        )}
-                      </div>
+                      )}
                     </div>
                   </div>
 
