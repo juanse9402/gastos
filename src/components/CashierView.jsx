@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { 
   Calculator, CheckCircle2, AlertTriangle, Send, 
   Coins, Banknote, CreditCard, Receipt, Users, 
-  HelpCircle, ChevronDown, ChevronUp, History, Sparkles 
+  HelpCircle, ChevronDown, ChevronUp, History, Sparkles, Bike 
 } from 'lucide-react';
 import { formatCurrency, formatDate } from '../utils/formatters';
+import DailySummarySheet from './DailySummarySheet';
 
 const BILL_DENOMINATIONS = [
   { value: 100000, label: '$100.000' },
@@ -30,6 +31,8 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
   const [gastosDetalle, setGastosDetalle] = useState('');
   const [nomina, setNomina] = useState(270000);
   const [nominaDetalle, setNominaDetalle] = useState('Pago turno diario');
+  const [pagoDomiciliario, setPagoDomiciliario] = useState('');
+  const [domiciliarioDetalle, setDomiciliarioDetalle] = useState('');
   const [notas, setNotas] = useState('');
 
   // Bill counter toggle
@@ -67,7 +70,9 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
   const numBanco = Number(banco) || 0;
   const numGastos = Number(gastos) || 0;
   const numNomina = Number(nomina) || 0;
+  const numPagoDomiciliario = Number(pagoDomiciliario) || 0;
 
+  // NOTA: numPagoDomiciliario es estrictamente informativo/histórico y NO se suma al totalCalculado
   const totalCalculado = numEfectivo + numBanco + numGastos + numNomina;
   const descuadre = totalCalculado - numCajaEsperada;
 
@@ -97,6 +102,8 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
       gastosDetalle,
       nomina: numNomina,
       nominaDetalle,
+      pagoDomiciliario: numPagoDomiciliario,
+      domiciliarioDetalle: domiciliarioDetalle.trim(),
       totalCalculado,
       descuadre,
       estadoCuadre,
@@ -117,6 +124,8 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
       setGastosDetalle('');
       setNomina('');
       setNominaDetalle('');
+      setPagoDomiciliario('');
+      setDomiciliarioDetalle('');
       setNotas('');
     }, 2500);
   };
@@ -367,6 +376,63 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
                 />
               </div>
             </div>
+
+            {/* Control Histórico de Pago a Domiciliario (No suma al total) */}
+            <div style={{
+              marginTop: '0.5rem',
+              padding: '0.85rem',
+              borderRadius: '12px',
+              background: 'rgba(245, 158, 11, 0.06)',
+              border: '1px dashed rgba(245, 158, 11, 0.35)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.6rem' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem', fontWeight: 700, color: 'var(--amber-light)' }}>
+                  <Bike size={15} />
+                  Pago a Domiciliario (Control Histórico)
+                </span>
+                <span style={{
+                  fontSize: '0.66rem',
+                  fontWeight: 700,
+                  padding: '0.15rem 0.5rem',
+                  borderRadius: '999px',
+                  background: 'rgba(245, 158, 11, 0.15)',
+                  color: '#fbbf24',
+                  border: '1px solid rgba(245, 158, 11, 0.3)',
+                  textTransform: 'uppercase'
+                }}>
+                  No suma al total
+                </span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
+                <div>
+                  <label className="form-label" style={{ fontSize: '0.73rem', marginBottom: '0.25rem' }}>Valor Pagado ($)</label>
+                  <input
+                    type="number"
+                    step="any"
+                    className="form-control"
+                    style={{ padding: '0.5rem 0.7rem', fontSize: '0.9rem' }}
+                    value={pagoDomiciliario}
+                    onChange={e => setPagoDomiciliario(e.target.value)}
+                    placeholder="$ 0"
+                  />
+                </div>
+                <div>
+                  <label className="form-label" style={{ fontSize: '0.73rem', marginBottom: '0.25rem' }}>Nombre / Detalle (Opcional)</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    style={{ padding: '0.5rem 0.7rem', fontSize: '0.9rem' }}
+                    value={domiciliarioDetalle}
+                    onChange={e => setDomiciliarioDetalle(e.target.value)}
+                    placeholder="Ej. Andrés (12 envíos)"
+                  />
+                </div>
+              </div>
+              <div style={{ fontSize: '0.71rem', color: 'var(--text-dim)', marginTop: '0.4rem' }}>
+                Se guarda únicamente en el historial del turno como control informativo; no afecta el cuadre ni se suma a los gastos.
+              </div>
+            </div>
           </div>
         </div>
 
@@ -406,6 +472,16 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
             <div style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }}>
               <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Nómina Turno</div>
               <div style={{ fontSize: '1.15rem', fontWeight: 'bold', color: 'var(--purple-primary)' }}>{formatCurrency(numNomina)}</div>
+            </div>
+
+            <div style={{ padding: '0.75rem', background: 'rgba(245, 158, 11, 0.06)', borderRadius: '12px', border: '1px dashed rgba(245, 158, 11, 0.3)' }}>
+              <div style={{ fontSize: '0.7rem', color: 'var(--amber-light)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                <Bike size={12} />
+                <span>Domiciliario (No suma)</span>
+              </div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#fbbf24' }}>
+                {numPagoDomiciliario > 0 ? formatCurrency(numPagoDomiciliario) : '$ -'}
+              </div>
             </div>
           </div>
 
@@ -489,6 +565,23 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
         </div>
       </form>
 
+      {/* Vista Total del Día Tipo Resumen (Solo Visualización) */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <DailySummarySheet
+          dailyCloses={dailyCloses}
+          liveValues={{
+            fecha,
+            cajaEsperada: numCajaEsperada,
+            efectivo: numEfectivo,
+            banco: numBanco,
+            gastos: numGastos,
+            nomina: numNomina,
+            pagoDomiciliario: numPagoDomiciliario
+          }}
+          title="Vista Total del Día (Tipo Resumen)"
+        />
+      </div>
+
       {/* History of recent closes */}
       <div className="glass-card">
         <h3 style={{ fontSize: '1.15rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -536,6 +629,17 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
                     {c.estadoCuadre} ({formatCurrency(Math.abs(c.descuadre))})
                   </span>
                 </div>
+                {Number(c.pagoDomiciliario) > 0 && (
+                  <div style={{ gridColumn: '1 / -1', borderTop: '1px dashed rgba(245, 158, 11, 0.25)', paddingTop: '0.35rem', marginTop: '0.15rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ color: 'var(--amber-light)', fontSize: '0.74rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                      <Bike size={13} />
+                      Domiciliario (Histórico - No suma):
+                    </span>
+                    <span style={{ fontWeight: 700, color: '#fbbf24', fontSize: '0.8rem' }}>
+                      {formatCurrency(c.pagoDomiciliario)} {c.domiciliarioDetalle ? `• ${c.domiciliarioDetalle}` : ''}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -551,6 +655,7 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
                 <th>Cajero</th>
                 <th>CAJA Esperada</th>
                 <th>Total Justificado</th>
+                <th>Domiciliario (Histórico)</th>
                 <th>Descuadre</th>
                 <th>Estado</th>
               </tr>
@@ -566,6 +671,20 @@ export default function CashierView({ currentUser, dailyCloses, onAddDailyClose 
                   <td>{c.cajero}</td>
                   <td>{formatCurrency(c.cajaEsperada)}</td>
                   <td style={{ fontWeight: 600 }}>{formatCurrency(c.totalCalculado)}</td>
+                  <td>
+                    {Number(c.pagoDomiciliario) > 0 ? (
+                      <div>
+                        <span style={{ color: '#fbbf24', fontWeight: 700, fontSize: '0.85rem' }}>
+                          {formatCurrency(c.pagoDomiciliario)}
+                        </span>
+                        {c.domiciliarioDetalle && (
+                          <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>{c.domiciliarioDetalle}</div>
+                        )}
+                      </div>
+                    ) : (
+                      <span style={{ color: 'var(--text-dim)', fontSize: '0.8rem' }}>$ -</span>
+                    )}
+                  </td>
                   <td>
                     <span className={`badge-cuadre ${c.descuadre > 0 ? 'sobra' : c.descuadre < 0 ? 'falta' : 'exacto'}`}>
                       {c.estadoCuadre} ({formatCurrency(Math.abs(c.descuadre))})

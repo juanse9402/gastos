@@ -56,13 +56,17 @@ export default function AuthPortal({
     e.preventDefault();
     setLoginError('');
     
+    const inputId = loginEmail.toLowerCase().trim();
     const user = users.find(u => 
-      u.email.toLowerCase().trim() === loginEmail.toLowerCase().trim() &&
+      (
+        (u.email || '').toLowerCase().trim() === inputId ||
+        (u.name || '').toLowerCase().trim() === inputId
+      ) &&
       u.password === loginPassword.trim()
     );
 
     if (!user) {
-      setLoginError('Correo o contraseña incorrectos. Por favor verifica tus credenciales.');
+      setLoginError('Usuario/móvil/correo o contraseña incorrectos. Por favor verifica tus credenciales.');
       return;
     }
 
@@ -136,10 +140,13 @@ export default function AuthPortal({
     setForgotSuccessMsg('');
 
     const trimmedEmail = forgotEmail.toLowerCase().trim();
-    const user = users.find(u => u.email.toLowerCase().trim() === trimmedEmail);
+    const user = users.find(u => 
+      (u.email || '').toLowerCase().trim() === trimmedEmail ||
+      (u.name || '').toLowerCase().trim() === trimmedEmail
+    );
 
     if (!user) {
-      setForgotError(`No existe ninguna cuenta registrada con el correo "${forgotEmail}". Verifica tu dirección o regístrate.`);
+      setForgotError(`No existe ninguna cuenta registrada con "${forgotEmail}". Verifica tu usuario, móvil o correo.`);
       return;
     }
 
@@ -326,16 +333,16 @@ export default function AuthPortal({
 
             <form onSubmit={handleLoginSubmit}>
               <div className="form-group">
-                <label className="form-label">Correo Electrónico</label>
+                <label className="form-label">Usuario, Número de Móvil o Correo</label>
                 <div style={{ position: 'relative' }}>
-                  <Mail size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }} />
+                  <User size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }} />
                   <input
-                    type="email"
+                    type="text"
                     className="form-control"
                     style={{ paddingLeft: '2.5rem' }}
                     value={loginEmail}
                     onChange={e => setLoginEmail(e.target.value)}
-                    placeholder="ej. admin@lapaperia.com"
+                    placeholder="ej. cajero1, 3001234567 o admin@lapaperia.com"
                     required
                   />
                 </div>
@@ -494,13 +501,13 @@ export default function AuthPortal({
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                   <div className="form-group">
-                    <label className="form-label">Correo de Ingreso</label>
+                    <label className="form-label">Usuario, Móvil o Correo</label>
                     <input
-                      type="email"
+                      type="text"
                       className="form-control"
                       value={adminEmail}
                       onChange={e => setAdminEmail(e.target.value)}
-                      placeholder="carlos@mitienda.com"
+                      placeholder="carlos@mitienda.com o 300..."
                       required
                     />
                   </div>
@@ -524,13 +531,13 @@ export default function AuthPortal({
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1.5rem' }}>
                   <div className="form-group">
-                    <label className="form-label">Correo Cajero</label>
+                    <label className="form-label">Usuario, Móvil o Correo Cajero</label>
                     <input
-                      type="email"
+                      type="text"
                       className="form-control"
                       value={cashierEmail}
                       onChange={e => setCashierEmail(e.target.value)}
-                      placeholder="caja@mitienda.com"
+                      placeholder="cajero1, 300... o correo"
                     />
                   </div>
 
@@ -633,16 +640,16 @@ export default function AuthPortal({
 
                 <form onSubmit={handleForgotStep1Submit}>
                   <div className="form-group" style={{ marginBottom: '1.5rem' }}>
-                    <label className="form-label">Correo Electrónico Registrado</label>
+                    <label className="form-label">Usuario, Móvil o Correo Registrado</label>
                     <div style={{ position: 'relative' }}>
-                      <Mail size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }} />
+                      <User size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }} />
                       <input
-                        type="email"
+                        type="text"
                         className="form-control"
                         style={{ paddingLeft: '2.5rem' }}
                         value={forgotEmail}
                         onChange={e => setForgotEmail(e.target.value)}
-                        placeholder="ej. admin@lapaperia.com"
+                        placeholder="ej. cajero1, 3001234567 o admin@lapaperia.com"
                         required
                       />
                     </div>

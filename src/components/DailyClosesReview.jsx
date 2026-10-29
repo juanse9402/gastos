@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { CheckCircle2, XCircle, Clock, AlertTriangle, Eye, ArrowRight, ShieldCheck, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
+import { CheckCircle2, XCircle, Clock, AlertTriangle, Eye, ArrowRight, ShieldCheck, ChevronDown, ChevronUp, Trash2, Bike } from 'lucide-react';
 import { formatCurrency, formatDate } from '../utils/formatters';
+import DailySummarySheet from './DailySummarySheet';
 
 export default function DailyClosesReview({ dailyCloses, onApproveClose, onRejectClose, onDeleteClose }) {
   const [expandedCloseId, setExpandedCloseId] = useState(null);
@@ -10,6 +11,8 @@ export default function DailyClosesReview({ dailyCloses, onApproveClose, onRejec
   };
 
   const pendingCount = dailyCloses.filter(c => c.estadoRevision !== 'Aprobado').length;
+  const closesWithDomiciliario = dailyCloses.filter(c => Number(c.pagoDomiciliario) > 0);
+  const totalHistoricoDomiciliario = closesWithDomiciliario.reduce((acc, c) => acc + (Number(c.pagoDomiciliario) || 0), 0);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -39,6 +42,71 @@ export default function DailyClosesReview({ dailyCloses, onApproveClose, onRejec
           </div>
         )}
       </div>
+
+      {/* Control Histórico Informativo de Domiciliarios (No suma a caja ni gastos) */}
+      <div className="glass-card" style={{
+        padding: '1rem 1.25rem',
+        background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(17, 24, 39, 0.7))',
+        border: '1px dashed rgba(245, 158, 11, 0.35)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '1rem'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '10px',
+            background: 'rgba(245, 158, 11, 0.15)',
+            color: 'var(--amber-light)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}>
+            <Bike size={20} />
+          </div>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#fff' }}>
+                Control Histórico de Pagos a Domiciliario
+              </span>
+              <span style={{
+                fontSize: '0.68rem',
+                fontWeight: 700,
+                padding: '0.12rem 0.5rem',
+                borderRadius: '999px',
+                background: 'rgba(245, 158, 11, 0.15)',
+                color: '#fbbf24',
+                border: '1px solid rgba(245, 158, 11, 0.3)',
+                textTransform: 'uppercase'
+              }}>
+                Informativo • No suma al total
+              </span>
+            </div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>
+              Registro de control por turno ({closesWithDomiciliario.length} {closesWithDomiciliario.length === 1 ? 'turno registrado' : 'turnos registrados'}). No afecta el cuadre de caja ni se descuenta de las finanzas generales.
+            </div>
+          </div>
+        </div>
+
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700 }}>
+            Acumulado Histórico Domiciliarios
+          </div>
+          <div style={{ fontSize: '1.35rem', fontWeight: 800, color: '#fbbf24' }}>
+            {formatCurrency(totalHistoricoDomiciliario)}
+          </div>
+        </div>
+      </div>
+
+      {/* Vista Total del Día Tipo Resumen (Solo visualización, idéntica al formato Excel) */}
+      <DailySummarySheet
+        dailyCloses={dailyCloses}
+        title="Vista Total del Día (Resumen General)"
+      />
 
       <div className="glass-card">
         {dailyCloses.length === 0 ? (
@@ -159,6 +227,19 @@ export default function DailyClosesReview({ dailyCloses, onApproveClose, onRejec
                       </div>
 
                       <div>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--amber-light)', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                          <Bike size={12} />
+                          <span>Domiciliario (No suma)</span>
+                        </div>
+                        <div style={{ fontWeight: 700, color: '#fbbf24', fontSize: '0.92rem', marginTop: '0.15rem' }}>
+                          {Number(c.pagoDomiciliario) > 0 ? formatCurrency(c.pagoDomiciliario) : '$ -'}
+                        </div>
+                        {c.domiciliarioDetalle && (
+                          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>{c.domiciliarioDetalle}</div>
+                        )}
+                      </div>
+
+                      <div>
                         <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Descuadre</div>
                         <div style={{ marginTop: '0.15rem' }}>
                           <span className={`badge-cuadre ${c.descuadre > 0 ? 'sobra' : c.descuadre < 0 ? 'falta' : 'exacto'}`} style={{ fontSize: '0.75rem', padding: '0.2rem 0.5rem' }}>
@@ -231,7 +312,7 @@ export default function DailyClosesReview({ dailyCloses, onApproveClose, onRejec
                         {c.desgloseBilletes && (
                           <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '0.35rem' }}>
                             {Object.entries(c.desgloseBilletes)
-                              .filter(([_, count]) => count > 0)
+                              .filter(([k, count]) => !k.startsWith('_') && count > 0)
                               .map(([k, count]) => `${count}x $${k}`)
                               .join(' • ')}
                           </div>
@@ -265,6 +346,26 @@ export default function DailyClosesReview({ dailyCloses, onApproveClose, onRejec
                         {c.nominaDetalle && (
                           <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
                             {c.nominaDetalle}
+                          </div>
+                        )}
+                      </div>
+
+                      <div style={{
+                        padding: '0.6rem 0.75rem',
+                        borderRadius: '8px',
+                        background: 'rgba(245, 158, 11, 0.06)',
+                        border: '1px dashed rgba(245, 158, 11, 0.3)'
+                      }}>
+                        <div style={{ color: 'var(--amber-light)', marginBottom: '0.2rem', fontSize: '0.78rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                          <Bike size={14} />
+                          <span>Domiciliario (Histórico • No suma)</span>
+                        </div>
+                        <div style={{ fontWeight: 'bold', color: '#fbbf24', fontSize: '1rem' }}>
+                          {Number(c.pagoDomiciliario) > 0 ? formatCurrency(c.pagoDomiciliario) : '$ -'}
+                        </div>
+                        {c.domiciliarioDetalle && (
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '0.15rem' }}>
+                            {c.domiciliarioDetalle}
                           </div>
                         )}
                       </div>

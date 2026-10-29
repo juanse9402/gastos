@@ -1,8 +1,20 @@
 import React, { useState } from 'react';
 import { 
   Users, UserPlus, KeyRound, ShieldCheck, UserCheck, 
-  Trash2, Mail, Lock, PlusCircle, CheckCircle2, AlertCircle, X, Shield 
+  Trash2, Mail, Lock, PlusCircle, CheckCircle2, AlertCircle, X, Shield, Smartphone, AtSign
 } from 'lucide-react';
+
+// Helper para detectar si el identificador es correo, móvil o usuario
+const getIdentifierMeta = (identifier = '') => {
+  const val = identifier.trim();
+  if (val.includes('@')) {
+    return { type: 'email', label: 'Correo', Icon: Mail };
+  }
+  if (/^[+\d][\d\s-]{5,}$/.test(val)) {
+    return { type: 'phone', label: 'Móvil', Icon: Smartphone };
+  }
+  return { type: 'username', label: 'Usuario', Icon: AtSign };
+};
 
 export default function UserManager({ 
   users, 
@@ -19,6 +31,7 @@ export default function UserManager({
   // New user form states
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [identifierType, setIdentifierType] = useState('any'); // 'usuario' | 'movil' | 'correo' | 'any'
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('cajero');
   const [formError, setFormError] = useState('');
@@ -38,6 +51,7 @@ export default function UserManager({
   const handleOpenAdd = () => {
     setName('');
     setEmail('');
+    setIdentifierType('any');
     setPassword('');
     setRole('cajero');
     setFormError('');
@@ -55,15 +69,17 @@ export default function UserManager({
       return;
     }
 
-    if (users.some(u => u.email.toLowerCase() === email.toLowerCase().trim())) {
-      setFormError(`El correo ${email} ya está registrado en el sistema.`);
+    const normalizedIdentifier = email.toLowerCase().trim();
+
+    if (users.some(u => (u.email || '').toLowerCase().trim() === normalizedIdentifier)) {
+      setFormError(`El usuario, móvil o correo "${email.trim()}" ya está registrado en el sistema.`);
       return;
     }
 
     const newUser = {
       id: `usr-${Date.now()}`,
       name: name.trim(),
-      email: email.toLowerCase().trim(),
+      email: normalizedIdentifier,
       password: password.trim(),
       role: role,
       companyId: activeCompany.id
@@ -184,8 +200,8 @@ export default function UserManager({
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
               <tr style={{ background: 'rgba(0, 0, 0, 0.2)', borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-dim)', fontSize: '0.75rem', textTransform: 'uppercase' }}>
-                <th style={{ padding: '0.85rem 1.25rem' }}>Usuario / Nombre</th>
-                <th style={{ padding: '0.85rem 1.25rem' }}>Correo Electrónico</th>
+                <th style={{ padding: '0.85rem 1.25rem' }}>Colaborador</th>
+                <th style={{ padding: '0.85rem 1.25rem' }}>Acceso (Usuario / Móvil / Correo)</th>
                 <th style={{ padding: '0.85rem 1.25rem' }}>Rol / Nivel de Acceso</th>
                 <th style={{ padding: '0.85rem 1.25rem' }}>PIN / Contraseña</th>
                 <th style={{ padding: '0.85rem 1.25rem', textAlign: 'right' }}>Acciones</th>
@@ -195,6 +211,7 @@ export default function UserManager({
               {companyUsers.map(user => {
                 const isAdmin = user.role === 'admin';
                 const isCurrent = user.id === currentUser?.id;
+                const { Icon: IdentifierIcon, label: idLabel } = getIdentifierMeta(user.email);
 
                 return (
                   <tr key={user.id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)', transition: 'background 0.2s' }}>
@@ -232,8 +249,8 @@ export default function UserManager({
                     </td>
 
                     <td style={{ padding: '1rem 1.25rem', color: 'var(--text-main)', fontSize: '0.88rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <Mail size={14} style={{ color: 'var(--text-dim)' }} />
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                        <IdentifierIcon size={14} style={{ color: 'var(--text-dim)' }} title={idLabel} />
                         <span>{user.email}</span>
                       </div>
                     </td>
@@ -444,15 +461,55 @@ export default function UserManager({
               </div>
 
               <div className="form-group">
-                <label className="form-label">Correo Electrónico (Ingreso)</label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem', flexWrap: 'wrap', gap: '0.35rem' }}>
+                  <label className="form-label" style={{ marginBottom: 0 }}>
+                    Dato de Ingreso (Cualquiera de los 3)
+                  </label>
+                  <div style={{ display: 'inline-flex', gap: '0.3rem', background: 'rgba(0,0,0,0.25)', padding: '0.2rem', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}>
+                    {[
+                      { id: 'usuario', label: '👤 Usuario' },
+                      { id: 'movil', label: '📱 Móvil' },
+                      { id: 'correo', label: '✉️ Correo' }
+                    ].map(opt => (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => setIdentifierType(opt.id)}
+                        style={{
+                          border: 'none',
+                          borderRadius: '6px',
+                          padding: '0.18rem 0.5rem',
+                          fontSize: '0.72rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          background: identifierType === opt.id ? 'rgba(245, 158, 11, 0.2)' : 'transparent',
+                          color: identifierType === opt.id ? 'var(--amber-light)' : 'var(--text-muted)'
+                        }}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <input
-                  type="email"
+                  type="text"
                   className="form-control"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder="mateo@empresa.com"
+                  placeholder={
+                    identifierType === 'usuario'
+                      ? 'Ej. mateo_caja o cajero2'
+                      : identifierType === 'movil'
+                      ? 'Ej. 3001234567'
+                      : identifierType === 'correo'
+                      ? 'Ej. mateo@empresa.com'
+                      : 'Ej. cajero2, 3001234567 o mateo@empresa.com'
+                  }
                   required
                 />
+                <span style={{ display: 'block', fontSize: '0.73rem', color: 'var(--text-dim)', marginTop: '0.3rem' }}>
+                  Puedes registrar un nombre de usuario, un número de celular o un correo electrónico.
+                </span>
               </div>
 
               <div className="form-group">

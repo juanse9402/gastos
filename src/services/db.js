@@ -100,25 +100,31 @@ export async function fetchTenantData(companyId, companyIndustry = 'Comidas Ráp
       notas: t.notas || ''
     }));
 
-    const dailyCloses = (closesRes.data || []).map(c => ({
-      id: c.id,
-      fecha: c.fecha,
-      hora: c.hora || '',
-      cajero: c.cajero,
-      turno: c.turno,
-      cajaEsperada: Number(c.caja_esperada || 0),
-      efectivo: Number(c.efectivo || 0),
-      banco: Number(c.banco || 0),
-      gastos: Number(c.gastos || 0),
-      nomina: Number(c.nomina || 0),
-      totalCalculado: Number(c.total_calculado || 0),
-      descuadre: Number(c.descuadre || 0),
-      estadoCuadre: c.estado_cuadre,
-      estadoRevision: c.estado_revision,
-      notas: c.notas || '',
-      desgloseBilletes: c.desglose_billetes || {},
-      bancosDetalle: c.bancos_detalle || []
-    }));
+    const dailyCloses = (closesRes.data || []).map(c => {
+      const rawBilletes = c.desglose_billetes || {};
+      const { _pagoDomiciliario, _domiciliarioDetalle, ...cleanBilletes } = rawBilletes;
+      return {
+        id: c.id,
+        fecha: c.fecha,
+        hora: c.hora || '',
+        cajero: c.cajero,
+        turno: c.turno,
+        cajaEsperada: Number(c.caja_esperada || 0),
+        efectivo: Number(c.efectivo || 0),
+        banco: Number(c.banco || 0),
+        gastos: Number(c.gastos || 0),
+        nomina: Number(c.nomina || 0),
+        pagoDomiciliario: Number(c.pago_domiciliario ?? _pagoDomiciliario ?? 0),
+        domiciliarioDetalle: c.domiciliario_detalle ?? _domiciliarioDetalle ?? '',
+        totalCalculado: Number(c.total_calculado || 0),
+        descuadre: Number(c.descuadre || 0),
+        estadoCuadre: c.estado_cuadre,
+        estadoRevision: c.estado_revision,
+        notas: c.notas || '',
+        desgloseBilletes: cleanBilletes,
+        bancosDetalle: c.bancos_detalle || []
+      };
+    });
 
     return { categories, transactions, dailyCloses };
   } catch {
@@ -182,7 +188,11 @@ export async function saveDailyCloseToSupabase(companyId, close) {
       estado_cuadre: close.estadoCuadre,
       estado_revision: close.estadoRevision,
       notas: close.notas || '',
-      desglose_billetes: close.desgloseBilletes || {},
+      desglose_billetes: {
+        ...(close.desgloseBilletes || {}),
+        _pagoDomiciliario: Number(close.pagoDomiciliario || 0),
+        _domiciliarioDetalle: close.domiciliarioDetalle || ''
+      },
       bancos_detalle: close.bancosDetalle || []
     };
     const { error } = await supabase.from('daily_closes').upsert(payload);
